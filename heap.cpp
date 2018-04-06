@@ -1,6 +1,6 @@
 #include "heap.h"
 
-HeapMap HeapObject::theHeap;
+HeapObject::HeapMap theHeap;
 
 HeapObject * HeapObject::Find(HeapObject * obj)
 {
@@ -13,6 +13,7 @@ HeapObject * HeapObject::Find(HeapObject * obj)
 
   return root;
 }
+
 HeapObject * HeapObject::Union(HeapObject * one, HeapObject * two)
 {
   HeapObject * one_root = Find(one);

@@ -1,6 +1,7 @@
+#ifndef HEAP_H__
+#define HEAP_H__
 
-#ifndef HEAP_H
-#define HEAP_H
+#include <stdlib.h>
 
 #include <iostream>
 #include <fstream>
@@ -9,20 +10,16 @@
 #include <vector>
 #include <cmath>
 #include <algorithm>
-#include <stdlib.h>
 
-using namespace std;
-
-class CCNode;
-class HeapObject;
-
-typedef map<int, HeapObject *> HeapMap;
+#include "cctree.h"
 
 class HeapObject
 {
+ public:
+  typedef std::map<int, HeapObject *> HeapMap;
  private:
   int id;
-  string type;
+  std::string type;
   int bytes;
   bool live;
 
@@ -44,7 +41,7 @@ class HeapObject
   static HeapMap theHeap;
 
  public:
-  HeapObject(int i /*, const string & ty, int sz, int a_time*/ )
+  HeapObject(int i /*, const std::string & ty, int sz, int a_time*/ )
     : id(i),
       type("UNKNOWN"),
       bytes(-1),
@@ -62,9 +59,9 @@ class HeapObject
 
   int getId() const { return id; }
 
-  const string & getType() const { return type; }
+  const std::string & getType() const { return type; }
 
-  void setAlloc(int a_time, int sz, const string & ty) {
+  void setAlloc(int a_time, int sz, const std::string & ty) {
     alloc_time = a_time;
     bytes = sz;
     type = ty;
@@ -117,4 +114,3 @@ class HeapObject
   void setPointsTo(HeapObject * target);
 };
 #endif
-
