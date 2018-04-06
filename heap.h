@@ -20,8 +20,7 @@ typedef map<int, HeapObject *> HeapMap;
 
 class HeapObject
 {
-private:
-
+ private:
   int id;
   string type;
   int bytes;
@@ -29,10 +28,10 @@ private:
 
   int alloc_time;
   CCNode * alloc_cc;
-  
+
   int death_time;
   CCNode * death_cc;
-  
+
   // -- union/find stuff
   HeapObject * parent;
   int rank;
@@ -41,12 +40,10 @@ private:
   int size;
   int num_dead;
 
-public:  
-
+ public:
   static HeapMap theHeap;
 
-public:
-
+ public:
   HeapObject(int i /*, const string & ty, int sz, int a_time*/ )
     : id(i),
       type("UNKNOWN"),
@@ -56,7 +53,7 @@ public:
       alloc_cc(0),
       death_time(-1),
       death_cc(0),
-      parent(0), 
+      parent(0),
       rank(0),
       pointsTo(0),
       size(1),
@@ -64,7 +61,7 @@ public:
   {}
 
   int getId() const { return id; }
-  
+
   const string & getType() const { return type; }
 
   void setAlloc(int a_time, int sz, const string & ty) {
@@ -72,8 +69,8 @@ public:
     bytes = sz;
     type = ty;
   }
-  
-  void setDead(int d_time) { 
+
+  void setDead(int d_time) {
     live = false;
     death_time = d_time;
   }
@@ -85,10 +82,10 @@ public:
 
   CCNode * getAllocCC() const { return alloc_cc; }
   void setAllocCC(CCNode * cc) { alloc_cc = cc; }
-  
+
   CCNode * getDeathCC() const { return death_cc; }
   void setDeathCC(CCNode * cc) { death_cc = cc; }
-  
+
   void incRank() { rank++; }
   int getRank() const { return rank; }
 
@@ -109,19 +106,15 @@ public:
   int getNumDead() const { return num_dead; }
 
   // -- Global heap
-  
   static HeapObject * DemandHeapObject(int object_id);
-  
+
   // -- Disjoint sets operations
 
   static HeapObject * Find(HeapObject * obj);
   static HeapObject * Union(HeapObject * one, HeapObject * two);
   static HeapObject * RecUnion(HeapObject * one, HeapObject * two);
-  
+
   void setPointsTo(HeapObject * target);
-  
-
 };
-
 #endif
 

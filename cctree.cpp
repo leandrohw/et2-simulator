@@ -1,4 +1,3 @@
-
 #include "cctree.h"
 
 extern int thread_number;
@@ -20,8 +19,8 @@ CCNode * CCNode::demand_child(int id, int thread_id, int time)
       return child;
     }
   }
-  
-  // -- Not Found
+
+  // Not Found
   CCNode * new_child = new CCNode(id, thread_id, time, this);
   children.push_back(new_child);
   return new_child;
@@ -29,20 +28,17 @@ CCNode * CCNode::demand_child(int id, int thread_id, int time)
 
 void CCNode::computeTotals()
 {
-  // -- Start with this node's values
-
+  // Start with this node's values
   incTotalAllocBytes(getAllocBytes());
   incTotalAllocObjects(getAllocObjects());
   incTotalDeadBytes(getDeadBytes());
   incTotalDeadObjects(getDeadObjects());
 
-  // -- Compute totals for any children, then add up
-  
+  // Compute totals for any children, then add up
   const CCNodeVector & children = getChildren();
   for (CCNodeVector::const_iterator p = children.begin();
        p != children.end();
-       p++)
-    {
+       p++) {
       CCNode * child = (*p);
       child->computeTotals();
 
@@ -50,7 +46,7 @@ void CCNode::computeTotals()
       incTotalAllocObjects(child->getTotalAllocObjects());
       incTotalDeadBytes(child->getTotalDeadBytes());
       incTotalDeadObjects(child->getTotalDeadObjects());
-    }
+  }
 }
 
 string CCNode::getMethodFullName()
@@ -67,7 +63,7 @@ string CCNode::getMethodFullName()
 
 void CCNode::printTree(int depth)
 {
-  if (getTotalAllocBytes() == 0 and
+  if (getTotalAllocBytes() == 0 &&
       getTotalAllocObjects() == 0)
     return;
 
@@ -105,7 +101,7 @@ void CCNode::collectNodes(CCNodeVector & all)
       CCNode * child = (*p);
       child->collectNodes(all);
     }
-}  
+}
 
 bool compareNodes(CCNode * one, CCNode * two)
 {
@@ -133,7 +129,10 @@ void CCNode::printStack()
 {
   CCNode * cur = this;
   while (cur) {
-    cout << "  " << cur->getMethodFullName() << "(0x" << hex << cur->getMethodId() << dec << ")" << endl;
+    cout << "  " << cur->getMethodFullName()
+         << "(0x" << hex << cur->getMethodId()
+         << dec << ")" << endl;
+
     cur = cur->getParent();
   }
 }
@@ -151,11 +150,11 @@ void CCNode::emitTreeMapTM3Rec(ofstream & out)
 {
   int abytes = getTotalAllocBytes();
   int dbytes = getTotalDeadBytes();
-  
-  if (abytes > 0 or dbytes > 0) {
+
+  if (abytes > 0 || dbytes > 0) {
     const CCNodeVector & children = getChildren();
-    
-    // -- Compute total size of children
+
+    // Compute total size of children
     int child_total_alloc = 0;
     int child_total_dead = 0;
     int num_children = 0;
@@ -168,11 +167,11 @@ void CCNode::emitTreeMapTM3Rec(ofstream & out)
       int child_dead =  child->getTotalDeadBytes();
       child_total_alloc += child_alloc;
       child_total_dead  += child_dead;
-      if (child_alloc > 0 or child_dead > 0)
+      if (child_alloc > 0 || child_dead > 0)
         num_children++;
     }
-    
-    // -- Output entry for this node
+
+    // Output entry for this node
     out << (abytes+dbytes) << "\t";
     out << getCalls() << "\t";
     out << "0" << "\t";
@@ -180,8 +179,9 @@ void CCNode::emitTreeMapTM3Rec(ofstream & out)
     out << getFirstCall() << "\t";
     emitPath(out);
     out << endl;
-    
-    // -- output synthetic node representing the this node's contribution (if necessary)
+
+    // Output synthetic node representing the this node's contribution
+    // (if necessary)
     if (num_children > 0) {
       int alloc_diff = abytes - child_total_alloc;
       int dead_diff = dbytes - child_total_dead;
@@ -206,8 +206,7 @@ void CCNode::emitTreeMapTM3Rec(ofstream & out)
         out << endl;
       }
     }
-    
-    // -- Output the children
+    // Output the children
     for (CCNodeVector::const_iterator p = children.begin();
       p != children.end();
       p++)
@@ -222,15 +221,11 @@ void CCNode::emitTreeMapTM3(ofstream & out)
 {
   out << "Bytes\tCalls\tLifetime\tThread\tFirst call" << endl;
   out << "INTEGER\tINTEGER\tINTEGER\tINTEGER\tINTEGER" << endl;
-  
+
   emitTreeMapTM3Rec(out);
 }
 
-/* emitTreeML
-
-   Emit the calling context tree in TreeML format, for use in prefuse
-*/
-
+// Emit the calling context tree in TreeML format, for use in prefuse
 void CCNode::emitTreeML(ofstream & out)
 {
   out << "<tree>" << endl;
@@ -245,9 +240,9 @@ void CCNode::emitTreeML(ofstream & out)
   out << "  <attributeDecl name=\"objdead\" type=\"Long\"/>" << endl;
   out << "  <attributeDecl name=\"thread\" type=\"Long\"/>" << endl;
   out << " </declarations>" << endl;
-  
+
   emitTreeMLRec(out, 1);
-  
+
   out << "</tree>" << endl;
 }
 
@@ -255,19 +250,18 @@ void CCNode::emitTreeMLRec(ofstream & out, int depth)
 {
   int abytes = getTotalAllocBytes();
   int dbytes = getTotalDeadBytes();
-  
+
   if (abytes + dbytes > 0) {
-    
     const CCNodeVector & children = getChildren();
     bool is_leaf = (children.size() == 0);
-    
+
     if (is_leaf) {
       // -- Leaf
       out << "<leaf>" << endl;
     } else {
       out << "<branch>" << endl;
     }
-    
+
     Method * meth = Method::getMethod(getMethodId());
     string nm;
     string classnm;
@@ -278,7 +272,7 @@ void CCNode::emitTreeMLRec(ofstream & out, int depth)
       nm = "ENTRY";
       classnm = "";
     }
-    
+
     int i = nm.find("<init>");
     if (i != string::npos)
       nm.replace(i, i+6, "&lt;init&gt;");
@@ -287,14 +281,19 @@ void CCNode::emitTreeMLRec(ofstream & out, int depth)
       nm.replace(j, j+8, "&lt;clinit&gt;");
     out << "<attribute name=\"name\" value=\"" << nm << "\"/>" << endl;
     out << "<attribute name=\"class\" value=\"" << classnm << "\"/>" << endl;
-    out << "<attribute name=\"bytes\" value=\"" << (abytes+dbytes) << "\"/>" << endl;
+    out << "<attribute name=\"bytes\" value=\"" << (abytes+dbytes)
+        << "\"/>" << endl;
     out << "<attribute name=\"alloc\" value=\"" << abytes << "\"/>" << endl;
     out << "<attribute name=\"dead\" value=\"" << dbytes << "\"/>" << endl;
-    out << "<attribute name=\"objects\" value=\"" << (getAllocObjects() + getDeadObjects()) << "\"/>" << endl;
-    out << "<attribute name=\"objalloc\" value=\"" << getAllocObjects() << "\"/>" << endl;
-    out << "<attribute name=\"objdead\" value=\"" << getDeadObjects() << "\"/>" << endl;
-    out << "<attribute name=\"thread\" value=\"" << threadIdNumbering[getThreadId()] << "\"/>" << endl;
-    
+    out << "<attribute name=\"objects\" value=\""
+        << (getAllocObjects() + getDeadObjects()) << "\"/>" << endl;
+    out << "<attribute name=\"objalloc\" value=\"" << getAllocObjects()
+        << "\"/>" << endl;
+    out << "<attribute name=\"objdead\" value=\"" << getDeadObjects()
+        << "\"/>" << endl;
+    out << "<attribute name=\"thread\" value=\""
+        << threadIdNumbering[getThreadId()] << "\"/>" << endl;
+
     for (CCNodeVector::const_iterator p = children.begin();
       p != children.end();
       p++)
@@ -302,7 +301,7 @@ void CCNode::emitTreeMLRec(ofstream & out, int depth)
       CCNode * child = (*p);
       child->emitTreeMLRec(out, depth+1);
     }
-    
+
     if (is_leaf) {
       // -- Leaf
       out << "</leaf>" << endl;
@@ -321,12 +320,11 @@ void CCNode::emitTreeJSONRec(ofstream & out, int depth)
 {
   int abytes = getTotalAllocBytes();
   int dbytes = getTotalDeadBytes();
-  
+
   if (abytes + dbytes > 0) {
-        
     string space(depth*2, ' ');
     out << space << "{" << endl;
-    
+
     Method * meth = Method::getMethod(getMethodId());
     string nm;
     string classnm;
@@ -337,7 +335,7 @@ void CCNode::emitTreeJSONRec(ofstream & out, int depth)
       nm = "ENTRY";
       classnm = "";
     }
-    
+
     out << space << " \"name\": \"" << nm << "\"," << endl;
 
     const CCNodeVector & children = getChildren();
@@ -346,16 +344,14 @@ void CCNode::emitTreeJSONRec(ofstream & out, int depth)
     } else {
       out << space << " \"children\": [" << abytes << endl;
       for (CCNodeVector::const_iterator p = children.begin();
-	   p != children.end();
-	   p++)
-	{
-	  CCNode * child = (*p);
-	  child->emitTreeJSONRec(out, depth+1);
-	}
+           p != children.end();
+           p++)
+      {
+        CCNode * child = (*p);
+        child->emitTreeJSONRec(out, depth+1);
+      }
       cout << space << " ]" << endl;
     }
-
     out << space << "}" << endl;
   }
 }
-
