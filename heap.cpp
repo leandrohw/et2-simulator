@@ -1,6 +1,6 @@
 #include "heap.h"
 
-HeapObject::HeapMap theHeap;
+HeapMap HeapObject::theHeap;
 
 HeapObject * HeapObject::Find(HeapObject * obj)
 {
@@ -112,13 +112,14 @@ void HeapObject::setPointsTo(HeapObject * target)
 HeapObject * HeapObject::DemandHeapObject(int object_id)
 {
   HeapObject * result;
-  HeapMap::iterator f = theHeap.find(object_id);
-  if (f != theHeap.end()) {
-    result = (*f).second;
-  } else {
-    result = new HeapObject(object_id /*, "UNKNOWN", 0, 0 */);
-    theHeap[object_id] = result;
-  }
+  theHeap.find(object_id);
+  // HeapMap::iterator f = theHeap.find(object_id);
+  // if (f != theHeap.end()) {
+  //   result = (*f).second;
+  // } else {
+  //   result = new HeapObject(object_id /*, "UNKNOWN", 0, 0 */);
+  //   theHeap[object_id] = result;
+  // }
 
   return result;
 }

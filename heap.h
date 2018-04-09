@@ -1,8 +1,8 @@
-#ifndef HEAP_H__
-#define HEAP_H__
+#ifndef HEAP_H_
+#define HEAP_H_
 
 #include <stdlib.h>
-
+#include <string>
 #include <iostream>
 #include <fstream>
 #include <map>
@@ -11,12 +11,15 @@
 #include <cmath>
 #include <algorithm>
 
-#include "cctree.h"
+#include "ccnode.h"
+
+
+class HeapObject;
+
+typedef std::map<int, HeapObject *> HeapMap;
 
 class HeapObject
 {
- public:
-  typedef std::map<int, HeapObject *> HeapMap;
  private:
   int id;
   std::string type;
@@ -36,9 +39,6 @@ class HeapObject
 
   int size;
   int num_dead;
-
- public:
-  static HeapMap theHeap;
 
  public:
   HeapObject(int i /*, const std::string & ty, int sz, int a_time*/ )
@@ -101,6 +101,8 @@ class HeapObject
   void setNumDead(int nd) { num_dead = nd; }
   void incNumDead() { num_dead++; }
   int getNumDead() const { return num_dead; }
+
+  static HeapMap theHeap;
 
   // -- Global heap
   static HeapObject * DemandHeapObject(int object_id);
