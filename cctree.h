@@ -36,10 +36,10 @@ class CCTree {
   int depth = 0;
   int64_t time = 0;
   bool in_death_records = false;
-int64_t last_thread_id = 0;
+  int64_t last_thread_id = 0;
   int64_t record = 0;
- public:
 
+ public:
   CCTree() {
     root = new CCNode(0, 0, 0, 0);
 
@@ -54,6 +54,23 @@ int64_t last_thread_id = 0;
   void handle_object_update(int old_target, int object_id, int new_target, int target_id);
   void handle_method_entry(int method_id, int object_id, int thread_id);
   void handle_method_exit(int method_id, int object_id, int thread_id);
+
+  // Output methods
+
+  void printTree(CCNode * node, int depth);
+  void printStack(CCNode * node);
+
+  void emitPath(CCNode * node, std::ofstream & out);
+  void emitTreeMapTM3Rec(CCNode * node, std::ofstream & out);
+  void emitTreeMapTM3(std::ofstream & out);
+
+  //     treeml output
+  void emitTreeMLRec(CCNode * node, std::ofstream & out, int depth);
+  void emitTreeML(std::ofstream & out);
+
+  //     JSON output
+  void emitTreeJSONRec(CCNode * node, std::ofstream & out, int depth);
+  void emitTreeJSON(std::ofstream & out);
 };
 
 #endif

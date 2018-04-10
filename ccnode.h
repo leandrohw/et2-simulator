@@ -2,6 +2,10 @@
 #ifndef CCNODE_H_
 #define CCNODE_H_
 
+#include <stdlib.h>
+
+#include <iostream>
+#include <fstream>
 #include <vector>
 #include <map>
 #include <string>
@@ -75,6 +79,7 @@ public:
   CCNode * getParent() const { return parent; }
 
   const CCNodeVector & getChildren() const { return children; }
+
 
   // Accounting
 
