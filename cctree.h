@@ -1,14 +1,12 @@
 
-#ifndef CCTREE_H
-#define CCTREE_H
+#ifndef CCTREE_H_
+#define CCTREE_H_
 
 #include "ccnode.h"
 #include "heap.h"
 
 class CCTree {
-
  private:
-
   HeapObject * heapObject;
   HeapObject * targetObject;
   CCNode * root;
@@ -42,16 +40,16 @@ class CCTree {
  public:
   CCTree() {
     root = new CCNode(0, 0, 0, 0);
-
     last_thread_id = 0;
     theStack[0] = root;
     threadStarts[0] = root;
-
-
   }
-  void handle_object_allocation(int object_id, int size, std::string type, int thread_id, int method_id);
+
+  void handle_object_allocation(int object_id, int size, std::string type,
+                                int thread_id, int method_id);
   void handle_object_death(int object_id);
-  void handle_object_update(int old_target, int object_id, int new_target, int target_id);
+  void handle_object_update(int old_target, int object_id,
+                            int new_target, int target_id);
   void handle_method_entry(int method_id, int object_id, int thread_id);
   void handle_method_exit(int method_id, int object_id, int thread_id);
 

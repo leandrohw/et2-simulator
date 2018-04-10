@@ -15,11 +15,11 @@
 
 class CCNode
 {
-public:
-  typedef std::map<long, CCNode *> CCNodeMap;
+ public:
+  typedef std::map<int64_t, CCNode *> CCNodeMap;
   typedef std::vector<CCNode *> CCNodeVector;
 
-private:
+ private:
   int method_id;
   int thread_id;
   CCNode * parent;
@@ -42,8 +42,7 @@ private:
 
   int alloc_rank;
 
-public:
-
+ public:
   static int count;
 
   CCNode(int id, int thread_id, int time, CCNode * par)

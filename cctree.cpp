@@ -3,7 +3,8 @@
 int debug = 0;
 
 
-void CCTree::handle_object_allocation(int object_id, int size, std::string type, int thread_id, int method_id) {
+void CCTree::handle_object_allocation(int object_id, int size, std::string type,
+                                      int thread_id, int method_id) {
 
   CCNode * curContext = 0;
 
@@ -17,7 +18,8 @@ void CCTree::handle_object_allocation(int object_id, int size, std::string type,
     newContext->incCalls();
     theStack[thread_id] = newContext;
     if (debug > 0)
-      std::cout << "Spawn thread 0x" << std::hex << thread_id << std::dec << std::endl;
+      std::cout << "Spawn thread 0x" << std::hex << thread_id
+                << std::dec << std::endl;
   }
 
   if (theStack[thread_id] == 0) {
@@ -36,7 +38,9 @@ void CCTree::handle_object_allocation(int object_id, int size, std::string type,
     std::cout << "Allocate 0x" << std::hex << object_id << " size 0x" << size
          << std::dec << " at time " << time << std::endl;
 
-    //if (debug > 1) curContext->printStack();
+    if (debug > 1) {
+      printStack(curContext);
+    }
   }
   last_thread_id = thread_id;
 }
@@ -53,7 +57,8 @@ void CCTree::handle_object_death(int object_id) {
   heapObject->setDeathCC(curContext);
 }
 
-void CCTree::handle_object_update(int old_target, int object_id, int new_target, int target_id) {
+void CCTree::handle_object_update(int old_target, int object_id,
+                                  int new_target, int target_id) {
   if (object_id != 0 && new_target != 0) {
     heapObject = HeapObject::DemandHeapObject(object_id);
     targetObject = HeapObject::DemandHeapObject(new_target);
@@ -67,10 +72,10 @@ void CCTree::handle_object_update(int old_target, int object_id, int new_target,
              << heapObject->getType() << " to 0x" << new_target
                   << std::dec << " " << targetObject->getType() << " at time "
              << time << std::endl;
-        // if (debug > 1) {
-        //   CCNode * curContext = theStack[last_thread_id];
-        //   curContext->printStack();
-        // }
+        if (debug > 1) {
+          CCNode * curContext = theStack[last_thread_id];
+          printStack(curContext);
+        }
       }
 
       // HeapObject::Union(heapObject, targetObject);
@@ -93,7 +98,7 @@ void CCTree::handle_method_entry(int method_id, int object_id, int thread_id) {
            << " -- started at " << curContext->getMethodFullName()
            << std::endl;
       std::cout << "   in context" << std::endl;
-      //curContext->printStack();
+      // curContext->printStack();
     } else {
       std::cout << "Problem: no threadStart for thread id 0x" << std::hex
                 << thread_id << std::dec << std::endl;
@@ -112,7 +117,9 @@ void CCTree::handle_method_entry(int method_id, int object_id, int thread_id) {
     std::cout << "Enter " << curContext->getMethodFullName() << " 0x"
               << std::hex << method_id << " thread 0x" << thread_id << std::dec
          << " at time " << time << std::endl;
-    //if (debug > 1) curContext->printStack();
+    if (debug > 1) {
+      printStack(curContext);
+    }
   }
 
   if (method_id == thread_start_method_id) {
@@ -122,7 +129,7 @@ void CCTree::handle_method_entry(int method_id, int object_id, int thread_id) {
     threadIdNumbering[object_id] = thread_number;
     if (true) {
       std::cout << "Found Thread.start at " << std::endl;
-      //curContext->printStack();
+      printStack(curContext);
     }
   }
 
@@ -147,7 +154,7 @@ void CCTree::handle_method_exit(int method_id, int object_id, int thread_id) {
     std::cout << "Exit  " << curContext->getMethodFullName() << " 0x"
               << std::hex << method_id << " thread 0x" << thread_id << std::dec
          << " at time " << time << std::endl;
-    //if (debug > 1) curContext->printStack();
+    if (debug > 1) printStack(curContext);
   }
 
   time++;
@@ -164,7 +171,8 @@ void CCTree::handle_method_exit(int method_id, int object_id, int thread_id) {
     std::cout << "THIS IS BAD: looking for "
          << std::hex << "0x" << method_id << " but found 0x"
               << cur_id << std::dec << std::endl;
-    //returning->printStack();
+    printStack(returning);
+
     // current_node unchanged
     depth = orig_depth;
   } else {
@@ -361,13 +369,17 @@ void CCTree::emitTreeMLRec(CCNode * node, std::ofstream & out, int depth)
     if (j != std::string::npos)
       nm.replace(j, j+8, "&lt;clinit&gt;");
     out << "<attribute name=\"name\" value=\"" << nm << "\"/>" << std::endl;
-    out << "<attribute name=\"class\" value=\"" << classnm << "\"/>" << std::endl;
+    out << "<attribute name=\"class\" value=\"" << classnm << "\"/>"
+        << std::endl;
     out << "<attribute name=\"bytes\" value=\"" << (abytes+dbytes)
         << "\"/>" << std::endl;
-    out << "<attribute name=\"alloc\" value=\"" << abytes << "\"/>" << std::endl;
-    out << "<attribute name=\"dead\" value=\"" << dbytes << "\"/>" << std::endl;
+    out << "<attribute name=\"alloc\" value=\"" << abytes << "\"/>"
+        << std::endl;
+    out << "<attribute name=\"dead\" value=\"" << dbytes << "\"/>"
+        << std::endl;
     out << "<attribute name=\"objects\" value=\""
-        << (node->getAllocObjects() + node->getDeadObjects()) << "\"/>" << std::endl;
+        << (node->getAllocObjects() + node->getDeadObjects()) << "\"/>"
+        << std::endl;
     out << "<attribute name=\"objalloc\" value=\"" << node->getAllocObjects()
         << "\"/>" << std::endl;
     out << "<attribute name=\"objdead\" value=\"" << node->getDeadObjects()

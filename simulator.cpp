@@ -25,7 +25,8 @@ void Simulator::read_trace_file(std::ifstream & in) {
           in >> std::hex >> size;
           in >> type;
           in >> std::hex >> thread_id;
-          tree->handle_object_allocation(object_id, size, type, thread_id, method_id);
+          tree->handle_object_allocation(object_id, size, type,
+                                         thread_id, method_id);
         break;
       case 'D':
           in >> std::hex >> object_id;
