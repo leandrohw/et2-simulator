@@ -19,7 +19,7 @@ class Simulator
  public:
   Simulator(std::string tf, std::string nf) :
   tracefile(tf),
-  namesfile(tf) {
+  namesfile(nf) {
     tree = new CCTree();
   }
 
