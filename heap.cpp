@@ -113,13 +113,13 @@ HeapObject * HeapObject::DemandHeapObject(int object_id)
 {
   HeapObject * result;
   theHeap.find(object_id);
-  // HeapMap::iterator f = theHeap.find(object_id);
-  // if (f != theHeap.end()) {
-  //   result = (*f).second;
-  // } else {
-  //   result = new HeapObject(object_id /*, "UNKNOWN", 0, 0 */);
-  //   theHeap[object_id] = result;
-  // }
+  HeapMap::iterator f = theHeap.find(object_id);
+  if (f != theHeap.end()) {
+    result = (*f).second;
+  } else {
+    result = new HeapObject(object_id /*, "UNKNOWN", 0, 0 */);
+    theHeap[object_id] = result;
+  }
 
   return result;
 }
