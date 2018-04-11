@@ -1,178 +1,74 @@
 
-#ifndef CCTREE_H
-#define CCTREE_H
+#ifndef CCTREE_H_
+#define CCTREE_H_
 
-#include <iostream>
-#include <fstream>
-#include <map>
-#include <set>
-#include <vector>
-#include <cmath>
-#include <algorithm>
-#include <stdlib.h>
+#include "ccnode.h"
+#include "heap.h"
 
-using namespace std;
+class CCTree {
+ private:
+  HeapObject * heapObject;
+  HeapObject * targetObject;
+  CCNode * root;
+  std::map<int, int> threadIdNumbering;
 
-class Method;
-class CCNode;
 
-typedef map<long, CCNode *> CCNodeMap;
-typedef map<int, Method *> MethodMap;
-typedef vector<CCNode *> CCNodeVector;
 
-class Method
-{
-private:
+  // -- Multi-threaded stack
+  typedef std::map<int, CCNode *> StackMap;
+  StackMap theStack;
+  // -- Global counters
 
-  int id;
-  string class_name;
-  string method_name;
-  string signature;
-  
-  static MethodMap allMethods;
+  int64_t total_alloc_size = 0;
 
-public:
+  int64_t no_alloc = 0;
 
-  Method(int i, string cn, string mn, string sig)
-    : id(i),
-      class_name(cn),
-      method_name(mn),
-      signature(sig)
-  {
-    allMethods[i] = this;
+
+
+  //    Map from thread objects to the context in which start() was called
+  StackMap threadStarts;
+  int thread_start_method_id = 0;
+  int thread_number = 0;
+
+
+  int depth = 0;
+  int64_t time = 0;
+  bool in_death_records = false;
+  int64_t last_thread_id = 0;
+  int64_t record = 0;
+
+ public:
+  CCTree() {
+    root = new CCNode(0, 0, 0, 0);
+    last_thread_id = 0;
+    theStack[0] = root;
+    threadStarts[0] = root;
   }
 
-  const string & getClassName() const { return class_name; }
-  const string & getMethodName() const { return method_name; }
-  const string & getSignature() const { return signature; }
-  
-  static Method * getMethod(int id) {
-    return allMethods[id];
-  }
-};
+  void handle_object_allocation(int object_id, int size, std::string type,
+                                int thread_id, int method_id);
+  void handle_object_death(int object_id);
+  void handle_object_update(int old_target, int object_id,
+                            int new_target, int target_id);
+  void handle_method_entry(int method_id, int object_id, int thread_id);
+  void handle_method_exit(int method_id, int object_id, int thread_id);
 
+  // Output methods
 
-class CCNode
-{
-private:
+  void printTree(CCNode * node, int depth);
+  void printStack(CCNode * node);
 
-  int method_id;
-  int thread_id;
-  CCNode * parent;
-  CCNodeVector children;
+  void emitPath(CCNode * node, std::ofstream & out);
+  void emitTreeMapTM3Rec(CCNode * node, std::ofstream & out);
+  void emitTreeMapTM3(std::ofstream & out);
 
-  int calls;
-
-  int first_call;
-  int last_call;
-
-  int alloc_bytes;
-  int alloc_objects;
-  int dead_bytes;
-  int dead_objects;
-
-  int total_alloc_bytes;
-  int total_alloc_objects;
-  int total_dead_bytes;
-  int total_dead_objects;
-
-  int alloc_rank;
-
-public:
-
-  static int count;
-
-  CCNode(int id, int thread_id, int time, CCNode * par)
-    : method_id(id),
-      thread_id(thread_id),
-      parent(par),
-      calls(0),
-      first_call(time),
-      last_call(time),
-      alloc_bytes(0),
-      alloc_objects(0),
-      dead_bytes(0),
-      dead_objects(0),
-      total_alloc_bytes(0),
-      total_alloc_objects(0),
-      total_dead_bytes(0),
-      total_dead_objects(0),
-      alloc_rank(0)
-  {
-    count++;
-  }
-
-  // -- Fields
-  
-  CCNode * demand_child(int id, int thread_id, int time);
-  
-  int getMethodId() const { return method_id; }
-  string getMethodFullName();
-    
-  int getThreadId() const { return thread_id; }
-
-  CCNode * getParent() const { return parent; }
-
-  const CCNodeVector & getChildren() const { return children; }
-
-  // --- Output methods
-  
-  void printTree(int depth);
-  void printStack();
-  
-  //     tm3 output
-  void emitPath(ofstream & out);
-  void emitTreeMapTM3Rec(ofstream & out);
-  void emitTreeMapTM3(ofstream & out);
-  
   //     treeml output
-  void emitTreeMLRec(ofstream & out, int depth);
-  void emitTreeML(ofstream & out);
-  
+  void emitTreeMLRec(CCNode * node, std::ofstream & out, int depth);
+  void emitTreeML(std::ofstream & out);
+
   //     JSON output
-  void emitTreeJSONRec(ofstream & out, int depth);
-  void emitTreeJSON(ofstream & out);
-  
-  // -- Accounting
-  
-  void computeTotals();
-  void collectNodes(CCNodeVector & all);
-  void rankNodes();
-  
-  void incCalls() { calls++; }
-  int getCalls() const { return calls; }
-
-  void setLastCall(int time) { last_call = time; }
-  int getLastCall() const { return last_call; }
-  int getFirstCall() const { return first_call; }
-
-  void incAllocBytes(int bytes) { alloc_bytes += bytes; }
-  int getAllocBytes() const { return alloc_bytes; }
-
-  void incAllocObjects() { alloc_objects++; }
-  int getAllocObjects() const { return alloc_objects; }
-
-  void incDeadBytes(int bytes) { dead_bytes += bytes; }
-  int getDeadBytes() const { return dead_bytes; }
-
-  void incDeadObjects() { dead_objects++; }
-  int getDeadObjects() const { return dead_objects; }
-
-  void incTotalAllocBytes(int total) { total_alloc_bytes += total; }
-  int getTotalAllocBytes() const { return total_alloc_bytes; }
-
-  void incTotalAllocObjects(int total) { total_alloc_objects += total; }
-  int getTotalAllocObjects() const { return total_alloc_objects; }
-
-  void incTotalDeadBytes(int total) { total_dead_bytes += total; }
-  int getTotalDeadBytes() const { return total_dead_bytes; }
-
-  void incTotalDeadObjects(int total) { total_dead_objects += total; }
-  int getTotalDeadObjects() const { return total_dead_objects; }
-
-  void setAllocRank(int rank) { alloc_rank = rank; }
-  int getAllocRank() const { return alloc_rank; }
+  void emitTreeJSONRec(CCNode * node, std::ofstream & out, int depth);
+  void emitTreeJSON(std::ofstream & out);
 };
 
 #endif
-

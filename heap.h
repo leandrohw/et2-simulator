@@ -1,7 +1,8 @@
+#ifndef HEAP_H_
+#define HEAP_H_
 
-#ifndef HEAP_H
-#define HEAP_H
-
+#include <stdlib.h>
+#include <string>
 #include <iostream>
 #include <fstream>
 #include <map>
@@ -9,30 +10,28 @@
 #include <vector>
 #include <cmath>
 #include <algorithm>
-#include <stdlib.h>
 
-using namespace std;
+#include "ccnode.h"
 
-class CCNode;
+
 class HeapObject;
 
-typedef map<int, HeapObject *> HeapMap;
+typedef std::map<int, HeapObject *> HeapMap;
 
 class HeapObject
 {
-private:
-
+ private:
   int id;
-  string type;
+  std::string type;
   int bytes;
   bool live;
 
   int alloc_time;
   CCNode * alloc_cc;
-  
+
   int death_time;
   CCNode * death_cc;
-  
+
   // -- union/find stuff
   HeapObject * parent;
   int rank;
@@ -41,13 +40,8 @@ private:
   int size;
   int num_dead;
 
-public:  
-
-  static HeapMap theHeap;
-
-public:
-
-  HeapObject(int i /*, const string & ty, int sz, int a_time*/ )
+ public:
+  HeapObject(int i /*, const std::string & ty, int sz, int a_time*/ )
     : id(i),
       type("UNKNOWN"),
       bytes(-1),
@@ -56,7 +50,7 @@ public:
       alloc_cc(0),
       death_time(-1),
       death_cc(0),
-      parent(0), 
+      parent(0),
       rank(0),
       pointsTo(0),
       size(1),
@@ -64,16 +58,16 @@ public:
   {}
 
   int getId() const { return id; }
-  
-  const string & getType() const { return type; }
 
-  void setAlloc(int a_time, int sz, const string & ty) {
+  const std::string & getType() const { return type; }
+
+  void setAlloc(int a_time, int sz, const std::string & ty) {
     alloc_time = a_time;
     bytes = sz;
     type = ty;
   }
-  
-  void setDead(int d_time) { 
+
+  void setDead(int d_time) {
     live = false;
     death_time = d_time;
   }
@@ -85,10 +79,10 @@ public:
 
   CCNode * getAllocCC() const { return alloc_cc; }
   void setAllocCC(CCNode * cc) { alloc_cc = cc; }
-  
+
   CCNode * getDeathCC() const { return death_cc; }
   void setDeathCC(CCNode * cc) { death_cc = cc; }
-  
+
   void incRank() { rank++; }
   int getRank() const { return rank; }
 
@@ -108,20 +102,17 @@ public:
   void incNumDead() { num_dead++; }
   int getNumDead() const { return num_dead; }
 
+  static HeapMap theHeap;
+
   // -- Global heap
-  
   static HeapObject * DemandHeapObject(int object_id);
-  
+
   // -- Disjoint sets operations
 
   static HeapObject * Find(HeapObject * obj);
   static HeapObject * Union(HeapObject * one, HeapObject * two);
   static HeapObject * RecUnion(HeapObject * one, HeapObject * two);
-  
+
   void setPointsTo(HeapObject * target);
-  
-
 };
-
 #endif
-

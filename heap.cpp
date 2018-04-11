@@ -1,4 +1,3 @@
-
 #include "heap.h"
 
 HeapMap HeapObject::theHeap;
@@ -14,6 +13,7 @@ HeapObject * HeapObject::Find(HeapObject * obj)
 
   return root;
 }
+
 HeapObject * HeapObject::Union(HeapObject * one, HeapObject * two)
 {
   HeapObject * one_root = Find(one);
@@ -28,28 +28,22 @@ HeapObject * HeapObject::Union(HeapObject * one, HeapObject * two)
   int one_rank = one_root->getRank();
   int two_rank = two_root->getRank();
 
-  /*
-  cout << "UNION " 
-       << hex << one_root->getId() << dec << " " << one_root->getType() << " (" << one_root->getSize() << ") + " 
-       << hex << two_root->getId() << dec << " " << two_root->getType() << " (" << two_root->getSize() << ")" << endl;
-  */
-
   HeapObject * new_root = 0;
   if (one_rank < two_rank) {
-    // -- Two becomes root
+    // Two becomes root
     one_root->setParent(two_root);
     two_root->setSize(new_size);
     two_root->setNumDead(new_nd);
     new_root = two_root;
   } else {
     if (one_rank > two_rank) {
-      // -- One becomes root
+      // One becomes root
       two_root->setParent(one_root);
       one_root->setSize(new_size);
       one_root->setNumDead(new_nd);
       new_root = one_root;
     } else {
-      // -- Pick one, and increment rank
+      // Pick one, and increment rank
       two_root->setParent(one_root);
       one_root->setSize(new_size);
       one_root->incRank();
@@ -61,8 +55,7 @@ HeapObject * HeapObject::Union(HeapObject * one, HeapObject * two)
   return new_root;
 }
 
-// -- Recursive union (for model that includes pointers)
-
+// Recursive union (for model that includes pointers)
 HeapObject * HeapObject::RecUnion(HeapObject * one, HeapObject * two)
 {
   HeapObject * one_root = Find(one);
@@ -76,18 +69,18 @@ HeapObject * HeapObject::RecUnion(HeapObject * one, HeapObject * two)
 
   HeapObject * new_root = Union(one, two);
 
-  if (one_ptr == 0 and two_ptr == 0)
+  if (one_ptr == 0 && two_ptr == 0)
     return new_root;
 
   HeapObject * new_ptr = 0;
-  if (one_ptr and two_ptr) {
+  if (one_ptr && two_ptr) {
     new_ptr = RecUnion(one_ptr, two_ptr);
   } else {
     if (one_ptr) {
       new_ptr = one_ptr;
     } else {
       if (two_ptr) {
-	new_ptr = two_ptr;
+        new_ptr = two_ptr;
       }
     }
   }
@@ -115,11 +108,11 @@ void HeapObject::setPointsTo(HeapObject * target)
   new_root->pointsTo = new_ptr;
 }
 
-// -- Heap management
-
+// Heap management
 HeapObject * HeapObject::DemandHeapObject(int object_id)
 {
   HeapObject * result;
+  theHeap.find(object_id);
   HeapMap::iterator f = theHeap.find(object_id);
   if (f != theHeap.end()) {
     result = (*f).second;
@@ -129,5 +122,4 @@ HeapObject * HeapObject::DemandHeapObject(int object_id)
   }
 
   return result;
-} 
-
+}
