@@ -1,16 +1,14 @@
 
-#ifndef CCTREE_H
-#define CCTREE_H
+#ifndef METHOD_H
+#define METHOD_H
 
 #include <string>
 #include <map>
-
+class Method;
+typedef std::map<int, Method *> MethodMap;
 class Method
 {
-public:
-  typedef std::map<int, Method *> MethodMap;
-
-private:
+ private:
   int id;
   std::string class_name;
   std::string method_name;
@@ -18,8 +16,7 @@ private:
 
   static MethodMap allMethods;
 
-public:
-
+ public:
   Method(int i, std::string cn, std::string mn, std::string sig)
     : id(i),
       class_name(cn),
@@ -37,6 +34,5 @@ public:
     return allMethods[id];
   }
 };
-
 
 #endif
