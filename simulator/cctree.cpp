@@ -30,7 +30,8 @@ void CCTree::handle_object_allocation(int object_id, int size, std::string type,
 
   curContext->incAllocBytes(size);
   curContext->incAllocObjects();
-  heapObject = HeapObject::DemandHeapObject(object_id);
+
+  HeapObject * heapObject = HeapObject::DemandHeapObject(object_id);
   heapObject->setAlloc(time, size, type);
   heapObject->setAllocCC(curContext);
 
@@ -46,7 +47,7 @@ void CCTree::handle_object_allocation(int object_id, int size, std::string type,
 }
 
 void CCTree::handle_object_death(int object_id) {
-  heapObject = HeapObject::DemandHeapObject(object_id);
+  HeapObject * heapObject = HeapObject::DemandHeapObject(object_id);
   heapObject->setDead(time);
   (HeapObject::Find(heapObject))->incNumDead();
 
@@ -60,8 +61,8 @@ void CCTree::handle_object_death(int object_id) {
 void CCTree::handle_object_update(int old_target, int object_id,
                                   int new_target, int target_id) {
   if (object_id != 0 && new_target != 0) {
-    heapObject = HeapObject::DemandHeapObject(object_id);
-    targetObject = HeapObject::DemandHeapObject(new_target);
+    HeapObject * heapObject = HeapObject::DemandHeapObject(object_id);
+    HeapObject * targetObject = HeapObject::DemandHeapObject(new_target);
     HeapObject * sroot = HeapObject::Find(heapObject);
     HeapObject * troot = HeapObject::Find(targetObject);
     if (targetObject->getType() != "[C" &&
@@ -77,8 +78,6 @@ void CCTree::handle_object_update(int old_target, int object_id,
           printStack(curContext);
         }
       }
-
-      // HeapObject::Union(heapObject, targetObject);
       heapObject->setPointsTo(targetObject);
     }
   }

@@ -5,28 +5,23 @@
 #include "ccnode.h"
 #include "heap.h"
 
+
+// Context tree.
 class CCTree {
  private:
-  HeapObject * heapObject;
-  HeapObject * targetObject;
   CCNode * root;
   std::map<int, int> threadIdNumbering;
 
-
-
-  // -- Multi-threaded stack
+  // Multi-threaded stack
   typedef std::map<int, CCNode *> StackMap;
   StackMap theStack;
-  // -- Global counters
+  // Map from thread objects to the context in which start() was called
+  StackMap threadStarts;
 
+  // Global counters
   int64_t total_alloc_size = 0;
-
   int64_t no_alloc = 0;
 
-
-
-  //    Map from thread objects to the context in which start() was called
-  StackMap threadStarts;
   int thread_start_method_id = 0;
   int thread_number = 0;
 

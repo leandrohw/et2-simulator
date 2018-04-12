@@ -155,3 +155,8 @@ void Simulator::simulate() {
 
   read_trace_file(in);
 }
+
+void Simulator::report() {
+
+
+}
