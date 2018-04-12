@@ -13,6 +13,7 @@ cc_library(
         "method.h",
         "simulator.h",
     ],
+    visibility = ["//visibility:public"],
     deps = ["@com_google_absl//absl/strings"],
 )
 

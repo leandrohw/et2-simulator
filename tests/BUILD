@@ -1,7 +1,8 @@
 cc_test(
-    name = "hello-test",
-    srcs = ["hello-test.cc"],
+    name = "simulator-test",
+    srcs = ["simulator_test.cpp"],
     deps = [
+        "//simulator",
         "@com_google_googletest//:gtest_main",
     ],
 )
