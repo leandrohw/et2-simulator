@@ -1,11 +1,23 @@
 cc_library(
     name = "simulator",
-    srcs = ["simulator.cpp", "cctree.cpp", "ccnode.cpp", "heap.cpp"],
-    hdrs = ["method.h", "simulator.h", "cctree.h", "ccnode.h", "heap.h"],
+    srcs = [
+        "ccnode.cpp",
+        "cctree.cpp",
+        "heap.cpp",
+        "simulator.cpp",
+    ],
+    hdrs = [
+        "ccnode.h",
+        "cctree.h",
+        "heap.h",
+        "method.h",
+        "simulator.h",
+    ],
+    deps = ["@com_google_absl//absl/strings"],
 )
 
 cc_binary(
     name = "main",
     srcs = ["main.cpp"],
-    deps = [":simulator"]
+    deps = [":simulator"],
 )

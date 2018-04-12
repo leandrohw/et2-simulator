@@ -12,6 +12,7 @@
 #include <algorithm>
 
 #include "method.h"
+#include "absl/strings/str_join.h"
 
 class CCNode
 {
