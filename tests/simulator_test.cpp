@@ -1,6 +1,6 @@
 #include "simulator/simulator.h"
 #include "gtest/gtest.h"
 
-TEST(HelloTest, GetGreet) {
+TEST(SimulatorTest, GetGreet) {
   EXPECT_EQ("Hello Bazel", "Hello Bazel");
 }
