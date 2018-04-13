@@ -41,7 +41,7 @@ class HeapObject
   int num_dead;
 
  public:
-  HeapObject(int i /*, const std::string & ty, int sz, int a_time*/ )
+  HeapObject(int i)
     : id(i),
       type("UNKNOWN"),
       bytes(-1),
@@ -72,7 +72,7 @@ class HeapObject
     death_time = d_time;
   }
 
-  bool isDead() const { return live; }
+  bool isLive() const { return live; }
 
   int getAllocTime() const { return alloc_time; }
   int getDeathTime() const { return death_time; }

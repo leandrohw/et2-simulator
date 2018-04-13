@@ -23,7 +23,7 @@ class CCTree {
   int64_t no_alloc = 0;
 
   int thread_start_method_id = 0;
-  int thread_number = 0;
+  int64_t thread_number = 0;
 
 
   int depth = 0;
@@ -39,6 +39,11 @@ class CCTree {
     theStack[0] = root;
     threadStarts[0] = root;
   }
+
+  int getDepth() { return depth; }
+  int getTime() { return time; }
+  int64_t getThreadNumber() { return thread_number; }
+  int64_t getLastThreadId() { return last_thread_id; }
 
   void handle_object_allocation(int object_id, int size, std::string type,
                                 int thread_id, int method_id);

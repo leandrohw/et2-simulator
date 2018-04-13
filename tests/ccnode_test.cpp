@@ -1,7 +1,7 @@
 #include "simulator/ccnode.h"
 #include "gtest/gtest.h"
 
-TEST(DefaultTest, Constructor) {
+TEST(CCNodeTest, Constructor) {
   CCNode * node = new CCNode(1, 2, 3, 0);
   ASSERT_EQ(node->getMethodId(), 1);
   ASSERT_EQ(node->getThreadId(), 2);
@@ -17,7 +17,7 @@ TEST(DefaultTest, Constructor) {
   ASSERT_EQ(node->getAllocRank(), 0);
 }
 
-TEST(DemandTest, DemandingNewChild) {
+TEST(CCNodeTest, DemandingNewChild) {
   CCNode * node = new CCNode(0, 0, 0, 0);
   CCNode * child = node->demand_child(1, 0, 0);
   ASSERT_EQ(node->getChildren().size(), 1);
@@ -25,7 +25,7 @@ TEST(DemandTest, DemandingNewChild) {
 
 }
 
-TEST(DemandTest, DemandingOldChild) {
+TEST(CCNodeTest, DemandingOldChild) {
   CCNode * node = new CCNode(0, 0, 0, 0);
   CCNode * old_child = node->demand_child(1, 0, 0);
   CCNode * new_child = node->demand_child(1, 0, 0);
@@ -34,7 +34,7 @@ TEST(DemandTest, DemandingOldChild) {
 
 }
 
-TEST(DemandTest, DemandingMultipleChildren) {
+TEST(CCNodeTest, DemandingMultipleChildren) {
   CCNode * node = new CCNode(0, 0, 0, 0);
   CCNode * old_child = node->demand_child(1, 0, 0);
   CCNode * new_child = node->demand_child(2, 0, 0);
@@ -43,7 +43,7 @@ TEST(DemandTest, DemandingMultipleChildren) {
 
 }
 
-TEST(DemandTest, DemandingChildTime) {
+TEST(CCNodeTest, DemandingChildTime) {
   CCNode * node = new CCNode(0, 0, 0, 0);
   CCNode * child = node->demand_child(1, 0, 0);
   ASSERT_EQ(child->getFirstCall(), 0);
@@ -55,8 +55,7 @@ TEST(DemandTest, DemandingChildTime) {
 
 }
 
-
-TEST(DemandComputeTotal, DemandingChildTime) {
+TEST(CCNodeTest, DemandingChildBytes) {
   CCNode * node = new CCNode(0, 0, 0, 0);
   node->incAllocBytes(32);
 
