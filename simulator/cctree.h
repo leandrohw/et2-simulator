@@ -45,9 +45,9 @@ class CCTree {
   int64_t getThreadNumber() { return thread_number; }
   int64_t getLastThreadId() { return last_thread_id; }
 
-  void handle_object_allocation(int object_id, int size, std::string type,
+  HeapObject * handle_object_allocation(int object_id, int size, std::string type,
                                 int thread_id, int method_id);
-  void handle_object_death(int object_id);
+  HeapObject * handle_object_death(int object_id);
   void handle_object_update(int old_target, int object_id,
                             int new_target, int target_id);
   void handle_method_entry(int method_id, int object_id, int thread_id);
