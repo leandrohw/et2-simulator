@@ -2,7 +2,7 @@
 #include "gtest/gtest.h"
 
 TEST(CCNodeTest, Constructor) {
-  CCNode * node = new CCNode(1, 2, 3, 0);
+  et_simulator::CCNode * node = new et_simulator::CCNode(1, 2, 3, 0);
   ASSERT_EQ(node->getMethodId(), 1);
   ASSERT_EQ(node->getThreadId(), 2);
   ASSERT_EQ(node->getFirstCall(), 3);
@@ -18,34 +18,34 @@ TEST(CCNodeTest, Constructor) {
 }
 
 TEST(CCNodeTest, DemandingNewChild) {
-  CCNode * node = new CCNode(0, 0, 0, 0);
-  CCNode * child = node->demand_child(1, 0, 0);
+  et_simulator::CCNode * node = new et_simulator::CCNode(0, 0, 0, 0);
+  et_simulator::CCNode * child = node->demand_child(1, 0, 0);
   ASSERT_EQ(node->getChildren().size(), 1);
   ASSERT_EQ(node->getChildren().at(0), child);
 
 }
 
 TEST(CCNodeTest, DemandingOldChild) {
-  CCNode * node = new CCNode(0, 0, 0, 0);
-  CCNode * old_child = node->demand_child(1, 0, 0);
-  CCNode * new_child = node->demand_child(1, 0, 0);
+  et_simulator::CCNode * node = new et_simulator::CCNode(0, 0, 0, 0);
+  et_simulator::CCNode * old_child = node->demand_child(1, 0, 0);
+  et_simulator::CCNode * new_child = node->demand_child(1, 0, 0);
   ASSERT_EQ(node->getChildren().size(), 1);
   ASSERT_EQ(old_child, new_child);
 
 }
 
 TEST(CCNodeTest, DemandingMultipleChildren) {
-  CCNode * node = new CCNode(0, 0, 0, 0);
-  CCNode * old_child = node->demand_child(1, 0, 0);
-  CCNode * new_child = node->demand_child(2, 0, 0);
+  et_simulator::CCNode * node = new et_simulator::CCNode(0, 0, 0, 0);
+  et_simulator::CCNode * old_child = node->demand_child(1, 0, 0);
+  et_simulator::CCNode * new_child = node->demand_child(2, 0, 0);
   ASSERT_EQ(node->getChildren().size(), 2);
   ASSERT_NE(old_child, new_child);
 
 }
 
 TEST(CCNodeTest, DemandingChildTime) {
-  CCNode * node = new CCNode(0, 0, 0, 0);
-  CCNode * child = node->demand_child(1, 0, 0);
+  et_simulator::CCNode * node = new et_simulator::CCNode(0, 0, 0, 0);
+  et_simulator::CCNode * child = node->demand_child(1, 0, 0);
   ASSERT_EQ(child->getFirstCall(), 0);
   ASSERT_EQ(child->getLastCall(), 0);
 
@@ -56,10 +56,10 @@ TEST(CCNodeTest, DemandingChildTime) {
 }
 
 TEST(CCNodeTest, DemandingChildBytes) {
-  CCNode * node = new CCNode(0, 0, 0, 0);
+  et_simulator::CCNode * node = new et_simulator::CCNode(0, 0, 0, 0);
   node->incAllocBytes(32);
 
-  CCNode * child = node->demand_child(1, 0, 0);
+  et_simulator::CCNode * child = node->demand_child(1, 0, 0);
   child->incAllocBytes(16);
 
   node->computeTotals();

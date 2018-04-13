@@ -1,5 +1,5 @@
-#ifndef SIMULATOR_H__
-#define SIMULATOR_H__
+#ifndef SIMULATOR_H_
+#define SIMULATOR_H_
 
 #include <iostream>
 #include <fstream>
@@ -14,6 +14,7 @@
 // * E: Method exit
 // * W: Object witness
 //
+namespace et_simulator {
 class Simulator
 {
  private:
@@ -37,5 +38,5 @@ class Simulator
 
 
 };
-
+} // namespace et_simulator
 #endif

@@ -1,5 +1,6 @@
 #include "simulator.h"
 
+namespace et_simulator {
 void Simulator::read_trace_file(std::ifstream & in) {
   int64_t record_count = 0;
   char kind;
@@ -160,3 +161,4 @@ void Simulator::report() {
 
 
 }
+} // namespace et_simulator

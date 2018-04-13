@@ -1,6 +1,8 @@
 #include "heap.h"
 
-HeapMap HeapObject::theHeap;
+namespace et_simulator {
+
+HeapMap et_simulator::HeapObject::theHeap;
 
 HeapObject * HeapObject::Find(HeapObject * obj)
 {
@@ -122,3 +124,4 @@ HeapObject * HeapObject::DemandHeapObject(int object_id)
 
   return result;
 }
+} // namespace et_simulator

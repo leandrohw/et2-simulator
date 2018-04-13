@@ -1,8 +1,8 @@
 #include "cctree.h"
 #include "method.h"
+
+namespace et_simulator {
 int debug = 0;
-
-
 void CCTree::handle_object_allocation(int object_id, int size, std::string type,
                                       int thread_id, int method_id) {
 
@@ -451,3 +451,4 @@ void CCTree::emitTreeJSONRec(CCNode* node, std::ofstream & out, int depth)
     out << space << "}" << std::endl;
   }
 }
+} // namespace et_simulator

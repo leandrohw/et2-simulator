@@ -1,7 +1,9 @@
 #include "ccnode.h"
 
-MethodMap Method::allMethods;
-int CCNode::count = 0;
+namespace et_simulator {
+
+MethodMap et_simulator::Method::allMethods;
+int et_simulator::CCNode::count = 0;
 
 CCNode * CCNode::demand_child(int id, int thread_id, int time)
 {
@@ -93,3 +95,4 @@ void CCNode::rankNodes()
       rank--;
     }
 }
+} // namespace et_simulator

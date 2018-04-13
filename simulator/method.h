@@ -4,6 +4,9 @@
 
 #include <string>
 #include <map>
+
+namespace et_simulator {
+
 class Method;
 typedef std::map<int, Method *> MethodMap;
 class Method
@@ -34,5 +37,5 @@ class Method
     return allMethods[id];
   }
 };
-
+}
 #endif

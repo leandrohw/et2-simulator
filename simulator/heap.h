@@ -14,6 +14,7 @@
 #include "ccnode.h"
 
 
+namespace et_simulator {
 class HeapObject;
 
 typedef std::map<int, HeapObject *> HeapMap;
@@ -115,4 +116,5 @@ class HeapObject
 
   void setPointsTo(HeapObject * target);
 };
+}
 #endif

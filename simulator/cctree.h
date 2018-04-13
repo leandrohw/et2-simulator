@@ -5,7 +5,7 @@
 #include "ccnode.h"
 #include "heap.h"
 
-
+namespace et_simulator {
 // Context tree.
 class CCTree {
  private:
@@ -70,5 +70,5 @@ class CCTree {
   void emitTreeJSONRec(CCNode * node, std::ofstream & out, int depth);
   void emitTreeJSON(std::ofstream & out);
 };
-
+} // namespace et_simulator
 #endif

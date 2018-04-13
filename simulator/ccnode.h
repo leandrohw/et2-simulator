@@ -14,6 +14,7 @@
 #include "method.h"
 #include "absl/strings/str_join.h"
 
+namespace et_simulator {
 class CCNode
 {
  public:
@@ -121,6 +122,6 @@ class CCNode
   void setAllocRank(int rank) { alloc_rank = rank; }
   int getAllocRank() const { return alloc_rank; }
 };
-
+} // namespace et_simulator
 
 #endif
