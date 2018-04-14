@@ -141,15 +141,13 @@ void Simulator::simulate() {
   name_file.open(namesfile);
 
   if (name_file.fail()) {
-    LOG(ERROR) << "Failed to open name file " << namesfile << std::endl;
-    //exit(EXIT_FAILURE);
+    LOG(FATAL) << "Failed to open name file " << namesfile << std::endl;
   }
 
   std::ifstream in;
   in.open(tracefile);
   if (in.fail()) {
-    LOG(ERROR) << "Failed to open name file " << tracefile << std::endl;
-    //exit(EXIT_FAILURE);
+    LOG(FATAL) << "Failed to open name file " << tracefile << std::endl;
   }
 
   read_trace_file(in);
