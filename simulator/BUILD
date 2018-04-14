@@ -14,7 +14,10 @@ cc_library(
         "simulator.h",
     ],
     visibility = ["//visibility:public"],
-    deps = ["@com_google_absl//absl/strings"],
+    deps = [
+        "@com_google_absl//absl/strings",
+        "@com_google_glog//:glog",
+    ],
 )
 
 cc_binary(

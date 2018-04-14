@@ -1,4 +1,5 @@
 #include "simulator.h"
+#include "glog/logging.h"
 
 void Simulator::read_trace_file(std::ifstream & in) {
   int64_t record_count = 0;
@@ -61,16 +62,14 @@ void Simulator::read_trace_file(std::ifstream & in) {
         break;
 
       default:
-        std::cout << "UNKNOWN" << std::endl;
+        DLOG(INFO) << "UNKNOWN" << std::endl;
         break;
     }
 
     getline(in, line);
 
     record_count++;
-    if (record_count % 1000000 == 0) {
-      std::cerr << "At " << record_count << std::endl;
-    }
+    LOG_EVERY_N(INFO, 1000000) << "At " << record_count;
   }
 }
 
@@ -142,15 +141,15 @@ void Simulator::simulate() {
   name_file.open(namesfile);
 
   if (name_file.fail()) {
-    std::cout << "Failed to open name file " << namesfile << std::endl;
-    exit(EXIT_FAILURE);
+    LOG(ERROR) << "Failed to open name file " << namesfile << std::endl;
+    //exit(EXIT_FAILURE);
   }
 
   std::ifstream in;
   in.open(tracefile);
   if (in.fail()) {
-    std::cout << "Failed to open name file " << tracefile << std::endl;
-    exit(EXIT_FAILURE);
+    LOG(ERROR) << "Failed to open name file " << tracefile << std::endl;
+    //exit(EXIT_FAILURE);
   }
 
   read_trace_file(in);

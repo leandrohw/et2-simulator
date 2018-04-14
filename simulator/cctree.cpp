@@ -1,7 +1,6 @@
 #include "cctree.h"
 #include "method.h"
-int debug = 0;
-
+#include "glog/logging.h"
 
 void CCTree::handle_object_allocation(int object_id, int size, std::string type,
                                       int thread_id, int method_id) {
@@ -17,9 +16,8 @@ void CCTree::handle_object_allocation(int object_id, int size, std::string type,
                                                    time);
     newContext->incCalls();
     theStack[thread_id] = newContext;
-    if (debug > 0)
-      std::cout << "Spawn thread 0x" << std::hex << thread_id
-                << std::dec << std::endl;
+    DLOG(INFO) << "Spawn thread 0x" << std::hex << thread_id
+               << std::dec << std::endl;
   }
 
   if (theStack[thread_id] == 0) {
@@ -35,14 +33,10 @@ void CCTree::handle_object_allocation(int object_id, int size, std::string type,
   heapObject->setAlloc(time, size, type);
   heapObject->setAllocCC(curContext);
 
-  if (debug > 0) {
-    std::cout << "Allocate 0x" << std::hex << object_id << " size 0x" << size
-         << std::dec << " at time " << time << std::endl;
+  DLOG(INFO) <<  "Allocate 0x" << std::hex << object_id << " size 0x" << size << std::dec << " at time " << time << std::endl;
 
-    if (debug > 1) {
-      printStack(curContext);
-    }
-  }
+  //printStack(curContext);
+
   last_thread_id = thread_id;
 }
 
@@ -68,16 +62,16 @@ void CCTree::handle_object_update(int old_target, int object_id,
     if (targetObject->getType() != "[C" &&
         targetObject->getType() != "UNKNOWN" &&
         troot->getId() != 0x19a) {
-      if (debug > 0) {
-        std::cout << "Pointer from 0x" << std::hex << object_id << " "
-             << heapObject->getType() << " to 0x" << new_target
-                  << std::dec << " " << targetObject->getType() << " at time "
-             << time << std::endl;
-        if (debug > 1) {
-          CCNode * curContext = theStack[last_thread_id];
-          printStack(curContext);
-        }
-      }
+
+      DLOG(INFO) << "Pointer from 0x" << std::hex << object_id << " "
+                 << heapObject->getType() << " to 0x" << new_target
+                 << std::dec << " " << targetObject->getType() << " at time "
+                 << time << std::endl;
+
+          //CCNode * curContext = theStack[last_thread_id];
+          //printStack(curContext);
+
+
       heapObject->setPointsTo(targetObject);
     }
   }
@@ -112,13 +106,12 @@ void CCTree::handle_method_entry(int method_id, int object_id, int thread_id) {
   curContext->incCalls();
   theStack[thread_id] = curContext;
 
-  if (debug > 0 || new_thread) {
-    std::cout << "Enter " << curContext->getMethodFullName() << " 0x"
-              << std::hex << method_id << " thread 0x" << thread_id << std::dec
-         << " at time " << time << std::endl;
-    if (debug > 1) {
-      printStack(curContext);
-    }
+  if (new_thread) {
+
+    DLOG(INFO) << "Enter " << curContext->getMethodFullName() << " 0x"
+               << std::hex << method_id << " thread 0x" << thread_id << std::dec
+               << " at time " << time << std::endl;
+      //printStack(curContext);
   }
 
   if (method_id == thread_start_method_id) {
@@ -149,12 +142,11 @@ void CCTree::handle_method_exit(int method_id, int object_id, int thread_id) {
     exit(EXIT_FAILURE);
   }
 
-  if (debug > 0) {
-    std::cout << "Exit  " << curContext->getMethodFullName() << " 0x"
+    DLOG(INFO) << "Exit  " << curContext->getMethodFullName() << " 0x"
               << std::hex << method_id << " thread 0x" << thread_id << std::dec
          << " at time " << time << std::endl;
-    if (debug > 1) printStack(curContext);
-  }
+    // printStack(curContext);
+
 
   time++;
 
