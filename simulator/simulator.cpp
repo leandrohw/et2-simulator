@@ -62,7 +62,7 @@ void Simulator::read_trace_file(std::ifstream & in) {
         break;
 
       default:
-        DLOG(INFO) << "UNKNOWN" << std::endl;
+        DLOG(INFO) << "UNKNOWN";
         break;
     }
 

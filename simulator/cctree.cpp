@@ -17,7 +17,7 @@ void CCTree::handle_object_allocation(int object_id, int size, std::string type,
     newContext->incCalls();
     theStack[thread_id] = newContext;
     DLOG(INFO) << "Spawn thread 0x" << std::hex << thread_id
-               << std::dec << std::endl;
+               << std::dec;
   }
 
   if (theStack[thread_id] == 0) {
@@ -33,7 +33,7 @@ void CCTree::handle_object_allocation(int object_id, int size, std::string type,
   heapObject->setAlloc(time, size, type);
   heapObject->setAllocCC(curContext);
 
-  DLOG(INFO) <<  "Allocate 0x" << std::hex << object_id << " size 0x" << size << std::dec << " at time " << time << std::endl;
+  DLOG(INFO) <<  "Allocate 0x" << std::hex << object_id << " size 0x" << size << std::dec << " at time " << time;
 
   //printStack(curContext);
 
@@ -66,10 +66,10 @@ void CCTree::handle_object_update(int old_target, int object_id,
       DLOG(INFO) << "Pointer from 0x" << std::hex << object_id << " "
                  << heapObject->getType() << " to 0x" << new_target
                  << std::dec << " " << targetObject->getType() << " at time "
-                 << time << std::endl;
+                 << time;
 
-          //CCNode * curContext = theStack[last_thread_id];
-          //printStack(curContext);
+      //CCNode * curContext = theStack[last_thread_id];
+      //printStack(curContext);
 
 
       heapObject->setPointsTo(targetObject);
@@ -87,14 +87,12 @@ void CCTree::handle_method_entry(int method_id, int object_id, int thread_id) {
     new_thread = true;
     curContext = threadStarts[thread_id];
     if (curContext) {
-      std::cout << "Spawn thread 0x" << std::hex << thread_id << std::dec
-           << " -- started at " << curContext->getMethodFullName()
-           << std::endl;
-      std::cout << "   in context" << std::endl;
-      // curContext->printStack();
+      DLOG(INFO) << "Spawn thread 0x" << std::hex << thread_id << std::dec
+                 << " -- started at " << curContext->getMethodFullName();
+      // printStack(curContext);
     } else {
-      std::cout << "Problem: no threadStart for thread id 0x" << std::hex
-                << thread_id << std::dec << std::endl;
+      DLOG(INFO) << "Problem: no threadStart for thread id 0x" << std::hex
+                 << thread_id << std::dec;
       curContext = root;
     }
   }
@@ -120,8 +118,8 @@ void CCTree::handle_method_entry(int method_id, int object_id, int thread_id) {
     thread_number++;
     threadIdNumbering[object_id] = thread_number;
     if (true) {
-      std::cout << "Found Thread.start at " << std::endl;
-      printStack(curContext);
+      DLOG(INFO) << "Found Thread.start at ";
+      // printStack(curContext);
     }
   }
 
@@ -131,20 +129,19 @@ void CCTree::handle_method_entry(int method_id, int object_id, int thread_id) {
 void CCTree::handle_method_exit(int method_id, int object_id, int thread_id) {
   CCNode * curContext = theStack[thread_id];
   if (theStack.find(thread_id) == theStack.end()) {
-    std::cout << "Never seen thread 0x" << std::hex << thread_id << std::endl;
+    std::cout << "Never seen thread 0x" << std::hex << thread_id;
   }
 
   if (curContext == 0) {
     Method * meth = Method::getMethod(method_id);
-    std::cout << "ERROR: Thread 0x" << std::hex << thread_id
-         << " returning from method " << meth->getMethodName()
-         << " in class " << meth->getClassName() << std::endl;
-    exit(EXIT_FAILURE);
+    DLOG(FATAL) << "ERROR: Thread 0x" << std::hex << thread_id
+                << " returning from method " << meth->getMethodName()
+                << " in class " << meth->getClassName();
   }
 
     DLOG(INFO) << "Exit  " << curContext->getMethodFullName() << " 0x"
-              << std::hex << method_id << " thread 0x" << thread_id << std::dec
-         << " at time " << time << std::endl;
+               << std::hex << method_id << " thread 0x" << thread_id << std::dec
+               << " at time " << time;
     // printStack(curContext);
 
 
@@ -159,10 +156,10 @@ void CCTree::handle_method_exit(int method_id, int object_id, int thread_id) {
   }
 
   if (returning == 0) {
-    std::cout << "THIS IS BAD: looking for "
-         << std::hex << "0x" << method_id << " but found 0x"
-              << cur_id << std::dec << std::endl;
-    printStack(returning);
+    DLOG(INFO) << "THIS IS BAD: looking for "
+               << std::hex << "0x" << method_id << " but found 0x"
+               << cur_id << std::dec;
+    // printStack(returning);
 
     // current_node unchanged
     depth = orig_depth;
@@ -434,7 +431,7 @@ void CCTree::emitTreeJSONRec(CCNode* node, std::ofstream & out, int depth)
         CCNode * child = (*p);
         emitTreeJSONRec(child, out, depth+1);
       }
-      std::cout << space << " ]" << std::endl;
+      out << space << " ]" << std::endl;
     }
     out << space << "}" << std::endl;
   }
