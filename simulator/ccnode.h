@@ -1,4 +1,3 @@
-
 #ifndef CCNODE_H_
 #define CCNODE_H_
 
@@ -12,7 +11,6 @@
 #include <algorithm>
 
 #include "method.h"
-#include "absl/strings/str_join.h"
 
 class CCNode
 {

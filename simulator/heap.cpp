@@ -2,8 +2,7 @@
 
 HeapMap HeapObject::theHeap;
 
-HeapObject * HeapObject::Find(HeapObject * obj)
-{
+HeapObject * HeapObject::Find(HeapObject * obj) {
   HeapObject * parent = obj->getParent();
   if (parent == 0)
     return obj;
@@ -14,8 +13,7 @@ HeapObject * HeapObject::Find(HeapObject * obj)
   return root;
 }
 
-HeapObject * HeapObject::Union(HeapObject * one, HeapObject * two)
-{
+HeapObject * HeapObject::Union(HeapObject * one, HeapObject * two) {
   HeapObject * one_root = Find(one);
   HeapObject * two_root = Find(two);
 
@@ -35,29 +33,27 @@ HeapObject * HeapObject::Union(HeapObject * one, HeapObject * two)
     two_root->setSize(new_size);
     two_root->setNumDead(new_nd);
     new_root = two_root;
+  } else if (one_rank > two_rank) {
+    // One becomes root
+    two_root->setParent(one_root);
+    one_root->setSize(new_size);
+    one_root->setNumDead(new_nd);
+    new_root = one_root;
   } else {
-    if (one_rank > two_rank) {
-      // One becomes root
-      two_root->setParent(one_root);
-      one_root->setSize(new_size);
-      one_root->setNumDead(new_nd);
-      new_root = one_root;
-    } else {
-      // Pick one, and increment rank
-      two_root->setParent(one_root);
-      one_root->setSize(new_size);
-      one_root->incRank();
-      one_root->setNumDead(new_nd);
-      new_root = one_root;
-    }
+    // Pick one, and increment rank
+    two_root->setParent(one_root);
+    one_root->setSize(new_size);
+    one_root->incRank();
+    one_root->setNumDead(new_nd);
+    new_root = one_root;
   }
+
 
   return new_root;
 }
 
 // Recursive union (for model that includes pointers)
-HeapObject * HeapObject::RecUnion(HeapObject * one, HeapObject * two)
-{
+HeapObject * HeapObject::RecUnion(HeapObject * one, HeapObject * two) {
   HeapObject * one_root = Find(one);
   HeapObject * two_root = Find(two);
 
@@ -93,8 +89,7 @@ HeapObject * HeapObject::RecUnion(HeapObject * one, HeapObject * two)
   return new_root;
 }
 
-void HeapObject::setPointsTo(HeapObject * target)
-{
+void HeapObject::setPointsTo(HeapObject * target) {
   HeapObject * root = Find(this);
   HeapObject * old_ptr = root->getPointsTo();
   HeapObject * new_ptr = 0;
@@ -109,8 +104,7 @@ void HeapObject::setPointsTo(HeapObject * target)
 }
 
 // Heap management
-HeapObject * HeapObject::DemandHeapObject(int object_id)
-{
+HeapObject * HeapObject::DemandHeapObject(int object_id) {
   HeapObject * result;
   HeapMap::iterator f = theHeap.find(object_id);
   if (f != theHeap.end()) {
