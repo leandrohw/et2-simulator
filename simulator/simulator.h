@@ -55,7 +55,7 @@ class Simulator
   bool parse_method(std::vector<std::string> trace);
 
   // Executes trace event
-  void execute(std::string line);
+  bool execute(std::string line);
 
  public:
   Simulator(std::string tf, std::string nf) :

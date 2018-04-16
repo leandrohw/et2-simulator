@@ -38,11 +38,11 @@ bool Simulator::parse_method(std::vector<std::string> trace) {
 }
 
 
-void Simulator::execute(std::string line) {
+bool Simulator::execute(std::string line) {
     std::vector<std::string> trace = absl::StrSplit(line, ' ');
 
     if(trace.size() < 1 || trace[0].length() != 1) {
-      exit(EXIT_FAILURE);
+      return false;
     }
 
     kind = trace[0][0];
@@ -51,42 +51,46 @@ void Simulator::execute(std::string line) {
       case 'A':
         if(!parse_object_allocation(trace)) {
            // Log bad allocation entry
+          return false;
         }
 
         tree->handle_object_allocation(object_id, size, type,
                                        thread_id, method_id);
         allocated_sizes.push_back(size);
-        break;
+        return true;
       case 'D':
         //in >> std::hex >> object_id;
         //tree->handle_object_death(object_id);
-        break;
+        return true;
       case 'U':
         if(!parse_object_update(trace)) {
           // Log bad update entry
+          return false;
         }
         tree->handle_object_update(old_target, object_id,
                                    new_target, thread_id);
-        break;
+        return true;
       case 'M':
         if(!parse_method(trace)) {
           // Log bad method entry name
+          return false;
         }
         tree->handle_method_entry(method_id, object_id, thread_id);
-        break;
+        return true;
       case 'E':
         if(! parse_method(trace)) {
           // Log bad entry name
+          return false;
         }
         tree->handle_method_exit(method_id, object_id, thread_id);
-        break;
+        return true;
       case 'R':
         // -- Throw out roots for now
-        break;
-      default:
-        std::cout << "UNKNOWN" << std::endl;
-        break;
+        return true;
     }
+
+    std::cout << "UNKNOWN" << std::endl;
+    return false;
 }
 
 void Simulator::read_trace_file() {
@@ -103,17 +107,20 @@ void Simulator::read_trace_file() {
 
 
   while (!in.eof()) {
+    if (record_count % 1000000 == 0) {
+      std::cerr << "At " << record_count << std::endl;
+    }
+
     getline(in, line);
 
     if (in.fail())
       break;
 
-    execute(line);
+    if(!execute(line)) {
+      exit(EXIT_FAILURE);
+    }
 
     record_count++;
-    if (record_count % 1000000 == 0) {
-      std::cerr << "At " << record_count << std::endl;
-    }
   }
 }
 
