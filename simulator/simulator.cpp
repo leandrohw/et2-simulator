@@ -56,7 +56,6 @@ bool Simulator::execute(std::string line) {
 
         tree->handle_object_allocation(object_id, size, type,
                                        thread_id, method_id);
-        allocated_sizes.push_back(size);
         return true;
       case 'D':
         //in >> std::hex >> object_id;
@@ -202,7 +201,5 @@ void Simulator::simulate() {
 
 void Simulator::report() {
   // TODO(leandrohw): decide how to output data
-  std::string s = absl::StrJoin(allocated_sizes, "\n");
-  std::cout << s << std::endl;
 
 }

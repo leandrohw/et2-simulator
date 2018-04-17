@@ -35,9 +35,6 @@ class Simulator
   int new_target;
   int root_id;
 
-  // Values measured from simulation
-  std::vector<int> allocated_sizes;
-
   // --------------
   // Helper methods
   // --------------
