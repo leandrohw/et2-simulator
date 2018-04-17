@@ -1,9 +1,8 @@
 #include "simulator/ccnode.h"
 
 namespace et_simulator {
-
-MethodMap et_simulator::Method::allMethods;
-int et_simulator::CCNode::count = 0;
+MethodMap Method::allMethods;
+int CCNode::count = 0;
 
 CCNode * CCNode::demand_child(int id, int thread_id, int time)
 {
