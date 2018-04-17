@@ -1,6 +1,6 @@
 
-#ifndef CCNODE_H_
-#define CCNODE_H_
+#ifndef ET2_SIMULATOR_SIMULATOR_CCNODE_H_
+#define ET2_SIMULATOR_SIMULATOR_CCNODE_H_
 
 #include <stdlib.h>
 
@@ -11,7 +11,7 @@
 #include <string>
 #include <algorithm>
 
-#include "method.h"
+#include "simulator/method.h"
 #include "absl/strings/str_join.h"
 
 namespace et_simulator {
@@ -122,6 +122,6 @@ class CCNode
   void setAllocRank(int rank) { alloc_rank = rank; }
   int getAllocRank() const { return alloc_rank; }
 };
-} // namespace et_simulator
+}  // namespace et_simulator
 
-#endif
+#endif  // ET2_SIMULATOR_SIMULATOR_CCNODE_H_

@@ -1,4 +1,4 @@
-#include "ccnode.h"
+#include "simulator/ccnode.h"
 
 namespace et_simulator {
 
@@ -95,4 +95,4 @@ void CCNode::rankNodes()
       rank--;
     }
 }
-} // namespace et_simulator
+}  // namespace et_simulator

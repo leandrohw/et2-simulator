@@ -1,6 +1,5 @@
-
-#ifndef METHOD_H
-#define METHOD_H
+#ifndef ET2_SIMULATOR_SIMULATOR_METHOD_H_
+#define ET2_SIMULATOR_SIMULATOR_METHOD_H_
 
 #include <string>
 #include <map>
@@ -37,5 +36,5 @@ class Method
     return allMethods[id];
   }
 };
-}
-#endif
+}  // namespace et_simulator
+#endif  // ET2_SIMULATOR_SIMULATOR_METHOD_H_

@@ -1,5 +1,5 @@
-#ifndef HEAP_H_
-#define HEAP_H_
+#ifndef ET2_SIMULATOR_SIMULATOR_HEAP_H_
+#define ET2_SIMULATOR_SIMULATOR_HEAP_H_
 
 #include <stdlib.h>
 #include <string>
@@ -11,7 +11,7 @@
 #include <cmath>
 #include <algorithm>
 
-#include "ccnode.h"
+#include "simulator/ccnode.h"
 
 
 namespace et_simulator {
@@ -33,7 +33,7 @@ class HeapObject
   int death_time;
   CCNode * death_cc;
 
-  // -- union/find stuff
+  // union/find stuff
   HeapObject * parent;
   int rank;
   HeapObject * pointsTo;
@@ -105,10 +105,10 @@ class HeapObject
 
   static HeapMap theHeap;
 
-  // -- Global heap
+  // Global heap
   static HeapObject * DemandHeapObject(int object_id);
 
-  // -- Disjoint sets operations
+  // Disjoint sets operations
 
   static HeapObject * Find(HeapObject * obj);
   static HeapObject * Union(HeapObject * one, HeapObject * two);
@@ -116,5 +116,5 @@ class HeapObject
 
   void setPointsTo(HeapObject * target);
 };
-}
-#endif
+}  // namespace et_simulator
+#endif  // ET2_SIMULATOR_SIMULATOR_HEAP_H
