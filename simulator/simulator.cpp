@@ -57,10 +57,6 @@ bool Simulator::execute(std::string line) {
         tree->handle_object_allocation(object_id, size, type,
                                        thread_id, method_id);
         return true;
-      case 'D':
-        //in >> std::hex >> object_id;
-        //tree->handle_object_death(object_id);
-        return true;
       case 'U':
         if(!parse_object_update(trace)) {
           // Log bad update entry
