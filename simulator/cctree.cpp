@@ -67,7 +67,6 @@ void CCTree::handle_object_update(int old_target, int object_id,
   if (object_id != 0 && new_target != 0) {
     HeapObject * heapObject = HeapObject::DemandHeapObject(object_id);
     HeapObject * targetObject = HeapObject::DemandHeapObject(new_target);
-    // Unused: HeapObject * sroot = HeapObject::Find(heapObject);
     HeapObject * troot = HeapObject::Find(targetObject);
     if (targetObject->getType() != "[C" &&
         targetObject->getType() != "UNKNOWN" &&
