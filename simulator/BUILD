@@ -24,13 +24,35 @@ cc_binary(
 )
 
 cc_test(
-    name = "test",
-    srcs = [
-        "ccnode_test.cpp",
-        "cctree_test.cpp",
-        "heap_test.cpp",
-        "simulator_test.cpp",
+    name = "ccnode_test",
+    srcs = ["ccnode_test.cpp"],
+    deps = [
+        "//simulator",
+        "@com_google_googletest//:gtest_main",
     ],
+)
+
+cc_test(
+    name = "cctree_test",
+    srcs = ["cctree_test.cpp"],
+    deps = [
+        "//simulator",
+        "@com_google_googletest//:gtest_main",
+    ],
+)
+
+cc_test(
+    name = "heap_test",
+    srcs = ["heap_test.cpp"],
+    deps = [
+        "//simulator",
+        "@com_google_googletest//:gtest_main",
+    ],
+)
+
+cc_test(
+    name = "simulator_test",
+    srcs = ["simulator_test.cpp"],
     deps = [
         "//simulator",
         "@com_google_googletest//:gtest_main",
