@@ -13,7 +13,9 @@ C++ program for reading ET2 trace files and computing precise death times
 ## Testing
 To run all test cases, execute:
 * bazel test //simulator/...
+
 To run an individual test case, run one of the following:
+
 * bazel test //simulator:ccnode_test
 * bazel test //simulator:cctree_test
 * bazel test //simulator:heap_test
