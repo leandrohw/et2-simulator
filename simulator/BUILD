@@ -1,20 +1,48 @@
 cc_library(
-    name = "simulator",
-    srcs = [
-        "ccnode.cpp",
-        "cctree.cpp",
-        "heap.cpp",
-        "simulator.cpp",
-    ],
+    name = "ccnode",
+    srcs = ["ccnode.cpp"],
     hdrs = [
         "ccnode.h",
-        "cctree.h",
-        "heap.h",
         "method.h",
-        "simulator.h",
     ],
     visibility = ["//visibility:public"],
     deps = ["@com_google_absl//absl/strings"],
+)
+
+cc_library(
+    name = "heap",
+    srcs = ["heap.cpp"],
+    hdrs = ["heap.h"],
+    visibility = ["//visibility:public"],
+    deps = [
+        ":ccnode",
+        "@com_google_absl//absl/strings",
+    ],
+)
+
+cc_library(
+    name = "cctree",
+    srcs = ["cctree.cpp"],
+    hdrs = [
+        "cctree.h",
+    ],
+    visibility = ["//visibility:public"],
+    deps = [
+        ":ccnode",
+        ":heap",
+        "@com_google_absl//absl/strings",
+    ],
+)
+
+cc_library(
+    name = "simulator",
+    srcs = ["simulator.cpp"],
+    hdrs = ["simulator.h"],
+    visibility = ["//visibility:public"],
+    deps = [
+        ":cctree",
+        "@com_google_absl//absl/strings",
+    ],
 )
 
 cc_binary(
