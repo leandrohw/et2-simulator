@@ -7,7 +7,6 @@ TEST(CCTreeTest, Constructor) {
   et_simulator::CCTree cctree;
   EXPECT_EQ(cctree.getDepth(), 0);
   EXPECT_EQ(cctree.getThreadNumber(), 0);
-
 }
 
 TEST(CCTreeTest, Method_Entry) {
