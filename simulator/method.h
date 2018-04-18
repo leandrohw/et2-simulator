@@ -1,9 +1,11 @@
-
-#ifndef METHOD_H
-#define METHOD_H
+#ifndef ET2_SIMULATOR_SIMULATOR_METHOD_H_
+#define ET2_SIMULATOR_SIMULATOR_METHOD_H_
 
 #include <string>
 #include <map>
+
+namespace et_simulator {
+
 class Method;
 typedef std::map<int, Method *> MethodMap;
 class Method
@@ -34,5 +36,5 @@ class Method
     return allMethods[id];
   }
 };
-
-#endif
+}  // namespace et_simulator
+#endif  // ET2_SIMULATOR_SIMULATOR_METHOD_H_

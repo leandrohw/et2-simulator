@@ -1,8 +1,10 @@
-#include "simulator.h"
+#include "simulator/simulator.h"
 #include "absl/strings/str_join.h"
 #include "absl/strings/str_split.h"
 #include "absl/strings/numbers.h"
 
+
+namespace et_simulator {
 bool Simulator::parse_object_allocation(std::vector<std::string> trace) {
   if(trace.size() != 5) {
     return false;
@@ -197,5 +199,6 @@ void Simulator::simulate() {
 
 void Simulator::report() {
   // TODO(leandrohw): decide how to output data
-
 }
+
+}  // namespace et_simulator
