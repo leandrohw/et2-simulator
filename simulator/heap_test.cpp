@@ -34,16 +34,16 @@ TEST(HeapTest, SetDead){
 
 TEST(HeapTest, SetAllocCC){
   et_simulator::HeapObject heapObj(10);
-  et_simulator::CCNode * ccnode = new et_simulator::CCNode(1, 2, 3, 0);
-  heapObj.setAllocCC(ccnode);
-  EXPECT_EQ(heapObj.getAllocCC(), ccnode);
+  et_simulator::CCNode ccnode(1, 2, 3, 0);
+  heapObj.setAllocCC(&ccnode);
+  EXPECT_EQ(heapObj.getAllocCC(), &ccnode);
 }
 
 TEST(HeapTest, SetDeathCC){
   et_simulator::HeapObject heapObj(10);
-  et_simulator::CCNode * ccnode = new et_simulator::CCNode(1, 2, 3, 0);
-  heapObj.setDeathCC(ccnode);
-  EXPECT_EQ(heapObj.getDeathCC(), ccnode);
+  et_simulator::CCNode ccnode(1, 2, 3, 0);
+  heapObj.setDeathCC(&ccnode);
+  EXPECT_EQ(heapObj.getDeathCC(), &ccnode);
 }
 
 TEST(HeapTest, SetIncrRank){
@@ -54,9 +54,9 @@ TEST(HeapTest, SetIncrRank){
 
 TEST(HeapTest, SetParent){
   et_simulator::HeapObject heapObj(10);
-  et_simulator::HeapObject * parent = new et_simulator::HeapObject(0);
-  heapObj.setParent(parent);
-  EXPECT_EQ(heapObj.getParent(), parent);
+  et_simulator::HeapObject parent(0);
+  heapObj.setParent(&parent);
+  EXPECT_EQ(heapObj.getParent(), &parent);
 }
 
 TEST(HeapTest, SetNumDead){
