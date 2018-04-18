@@ -1,5 +1,6 @@
-#include "ccnode.h"
+#include "simulator/ccnode.h"
 
+namespace et_simulator {
 MethodMap Method::allMethods;
 int CCNode::count = 0;
 
@@ -93,3 +94,4 @@ void CCNode::rankNodes()
       rank--;
     }
 }
+}  // namespace et_simulator

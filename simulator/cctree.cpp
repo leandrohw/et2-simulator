@@ -1,10 +1,12 @@
-#include "cctree.h"
-#include "method.h"
+#include "simulator/cctree.h"
+#include "simulator/method.h"
 #include "glog/logging.h"
 
-void CCTree::handle_object_allocation(int object_id, int size, std::string type,
-                                      int thread_id, int method_id) {
-
+namespace et_simulator {
+int debug = 0;
+void CCTree::handle_object_allocation(int object_id, int size,
+                                      std::string type, int thread_id,
+                                      int method_id) {
   CCNode * curContext = 0;
 
   if (thread_id == object_id) {
@@ -34,7 +36,6 @@ void CCTree::handle_object_allocation(int object_id, int size, std::string type,
   heapObject->setAllocCC(curContext);
 
   DLOG(INFO) <<  "Allocate 0x" << std::hex << object_id << " size 0x" << size << std::dec << " at time " << time;
-
   //printStack(curContext);
 
   last_thread_id = thread_id;
@@ -57,7 +58,6 @@ void CCTree::handle_object_update(int old_target, int object_id,
   if (object_id != 0 && new_target != 0) {
     HeapObject * heapObject = HeapObject::DemandHeapObject(object_id);
     HeapObject * targetObject = HeapObject::DemandHeapObject(new_target);
-    HeapObject * sroot = HeapObject::Find(heapObject);
     HeapObject * troot = HeapObject::Find(targetObject);
     if (targetObject->getType() != "[C" &&
         targetObject->getType() != "UNKNOWN" &&
@@ -92,10 +92,11 @@ void CCTree::handle_method_entry(int method_id, int object_id, int thread_id) {
       // printStack(curContext);
     } else {
       DLOG(INFO) << "Problem: no threadStart for thread id 0x" << std::hex
-                 << thread_id << std::dec;
-      curContext = root;
+                 << thread_id << std::dec << " in context";
     }
+    curContext = root;
   }
+
 
   time++;
   depth++;
@@ -105,7 +106,6 @@ void CCTree::handle_method_entry(int method_id, int object_id, int thread_id) {
   theStack[thread_id] = curContext;
 
   if (new_thread) {
-
     DLOG(INFO) << "Enter " << curContext->getMethodFullName() << " 0x"
                << std::hex << method_id << " thread 0x" << thread_id << std::dec
                << " at time " << time << std::endl;
@@ -113,15 +113,13 @@ void CCTree::handle_method_entry(int method_id, int object_id, int thread_id) {
   }
 
   if (method_id == thread_start_method_id) {
-    // -- Found a new thread start
+    // Found a new thread start
     threadStarts[object_id] = curContext;
     thread_number++;
     threadIdNumbering[object_id] = thread_number;
-    if (true) {
-      DLOG(INFO) << "Found Thread.start at ";
-      // printStack(curContext);
+    DLOG(INFO) << "Found Thread.start at ";
+    // printStack(curContext);
     }
-  }
 
   last_thread_id = thread_id;
 }
@@ -144,13 +142,11 @@ void CCTree::handle_method_exit(int method_id, int object_id, int thread_id) {
                << " at time " << time;
     // printStack(curContext);
 
-
   time++;
-
   CCNode * returning = curContext;
   int cur_id = returning->getMethodId();
   int orig_depth = depth;
-  while (returning || returning->getMethodId() != method_id) {
+  while (returning && returning->getMethodId() != method_id) {
     returning = returning->getParent();
     depth--;
   }
@@ -160,7 +156,6 @@ void CCTree::handle_method_exit(int method_id, int object_id, int thread_id) {
                << std::hex << "0x" << method_id << " but found 0x"
                << cur_id << std::dec;
     // printStack(returning);
-
     // current_node unchanged
     depth = orig_depth;
   } else {
@@ -168,7 +163,6 @@ void CCTree::handle_method_exit(int method_id, int object_id, int thread_id) {
     theStack[thread_id] = returning->getParent();
     depth--;
   }
-
   last_thread_id = thread_id;
 }
 
@@ -350,10 +344,10 @@ void CCTree::emitTreeMLRec(CCNode * node, std::ofstream & out, int depth)
       classnm = "";
     }
 
-    int i = nm.find("<init>");
+    unsigned int i = nm.find("<init>");
     if (i != std::string::npos)
       nm.replace(i, i+6, "&lt;init&gt;");
-    int j = nm.find("<clinit>");
+    unsigned int j = nm.find("<clinit>");
     if (j != std::string::npos)
       nm.replace(j, j+8, "&lt;clinit&gt;");
     out << "<attribute name=\"name\" value=\"" << nm << "\"/>" << std::endl;
@@ -436,3 +430,4 @@ void CCTree::emitTreeJSONRec(CCNode* node, std::ofstream & out, int depth)
     out << space << "}" << std::endl;
   }
 }
+}  // namespace et_simulator
