@@ -1,12 +1,15 @@
+#include "gflags/gflags.h"
+#include "glog/logging.h"
 #include "simulator/simulator.h"
+
+DEFINE_string(tracefile, "", "Trace file produced by Elephant Tracks");
+DEFINE_string(namesfile, "", "Names file produced by Elephant Tracks");
 
 int main(int argc, char * argv[])
 {
-  if (argc < 3) {
-    std::cout << "Usage: cctree <tracefile> <namesfile>" << std::endl;
-    exit(0);
-  }
+  google::InitGoogleLogging(argv[0]);
+  gflags::ParseCommandLineFlags(&argc, &argv, true);
 
-  et_simulator::Simulator simulator(argv[1], argv[2]);
+  et_simulator::Simulator simulator(FLAGS_tracefile, FLAGS_namesfile);
   simulator.simulate();
 }
