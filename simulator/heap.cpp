@@ -2,7 +2,7 @@
 
 namespace et_simulator {
 
-HeapMap et_simulator::HeapObject::theHeap;
+HeapMap HeapObject::theHeap;
 
 HeapObject * HeapObject::Find(HeapObject * obj)
 {

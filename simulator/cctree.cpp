@@ -3,7 +3,7 @@
 
 namespace et_simulator {
 int debug = 0;
-HeapObject * CCTree::handle_object_allocation(int object_id, int size,
+void CCTree::handle_object_allocation(int object_id, int size,
                                               std::string type, int thread_id,
                                               int method_id) {
   CCNode * curContext = 0;
@@ -44,11 +44,9 @@ HeapObject * CCTree::handle_object_allocation(int object_id, int size,
     }
   }
   last_thread_id = thread_id;
-
-  return heapObject;
 }
 
-HeapObject * CCTree::handle_object_death(int object_id) {
+void CCTree::handle_object_death(int object_id) {
   HeapObject * heapObject = HeapObject::DemandHeapObject(object_id);
   heapObject->setDead(time);
   (HeapObject::Find(heapObject))->incNumDead();
@@ -58,8 +56,6 @@ HeapObject * CCTree::handle_object_death(int object_id) {
   curContext->incDeadBytes(heapObject->getSize());
   curContext->incDeadObjects();
   heapObject->setDeathCC(curContext);
-
-  return heapObject;
 }
 
 void CCTree::handle_object_update(int old_target, int object_id,

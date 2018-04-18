@@ -33,15 +33,23 @@ TEST(CCTreeTest, Method_Exit) {
 TEST(CCTreeTest, Object_Allocation) {
   et_simulator::CCTree cctree;
   cctree.handle_method_entry(474, 0, 1000);
-  et_simulator::HeapObject * heapObj = cctree.handle_object_allocation(21, 16, "type", 0, 474);
+  cctree.handle_object_allocation(21, 16, "type", 0, 474);
+  et_simulator::HeapMap::iterator f =
+      et_simulator::HeapObject::theHeap.find(21);
+  EXPECT_NE(f, et_simulator::HeapObject::theHeap.end());
+  et_simulator::HeapObject* heapObj = et_simulator::HeapObject::theHeap[21];
   EXPECT_EQ(heapObj->getAllocTime(), 1);
 }
 
 TEST(CCTreeTest, Object_Death) {
   et_simulator::CCTree cctree;
   cctree.handle_method_entry(474, 0, 1000);
-  et_simulator::HeapObject * heapObj = cctree.handle_object_allocation(21, 16, "type", 0, 474);
+  cctree.handle_object_allocation(21, 16, "type", 0, 474);
   cctree.handle_method_entry(475, 0, 1000);
   cctree.handle_object_death(21);
+  et_simulator::HeapMap::iterator f =
+      et_simulator::HeapObject::theHeap.find(21);
+  EXPECT_NE(f, et_simulator::HeapObject::theHeap.end());
+  et_simulator::HeapObject* heapObj = et_simulator::HeapObject::theHeap[21];
   EXPECT_EQ(heapObj->getDeathTime(), 2);
 }
