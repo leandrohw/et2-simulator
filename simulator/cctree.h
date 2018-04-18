@@ -31,6 +31,7 @@ class CCTree {
   int64_t last_thread_id = 0;
   int64_t record = 0;
 
+  void logStack(CCNode * node);
  public:
   CCTree() {
     root = new CCNode(0, 0, 0, 0);
@@ -56,8 +57,6 @@ class CCTree {
   //  Output methods
 
   void printTree(CCNode * node, int depth);
-  void printStack(CCNode * node);
-
   void emitPath(CCNode * node, std::ofstream & out);
   void emitTreeMapTM3Rec(CCNode * node, std::ofstream & out);
   void emitTreeMapTM3(std::ofstream & out);
