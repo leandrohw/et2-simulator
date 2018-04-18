@@ -1,5 +1,5 @@
-#ifndef HEAP_H_
-#define HEAP_H_
+#ifndef ET2_SIMULATOR_SIMULATOR_HEAP_H_
+#define ET2_SIMULATOR_SIMULATOR_HEAP_H_
 
 #include <stdlib.h>
 #include <string>
@@ -11,9 +11,10 @@
 #include <cmath>
 #include <algorithm>
 
-#include "ccnode.h"
+#include "simulator/ccnode.h"
 
 
+namespace et_simulator {
 class HeapObject;
 
 typedef std::map<int, HeapObject *> HeapMap;
@@ -32,7 +33,7 @@ class HeapObject
   int death_time;
   CCNode * death_cc;
 
-  // -- union/find stuff
+  // union/find stuff
   HeapObject * parent;
   int rank;
   HeapObject * pointsTo;
@@ -41,7 +42,7 @@ class HeapObject
   int num_dead;
 
  public:
-  HeapObject(int i /*, const std::string & ty, int sz, int a_time*/ )
+  HeapObject(int i)
     : id(i),
       type("UNKNOWN"),
       bytes(-1),
@@ -72,7 +73,7 @@ class HeapObject
     death_time = d_time;
   }
 
-  bool isDead() const { return live; }
+  bool isLive() const { return live; }
 
   int getAllocTime() const { return alloc_time; }
   int getDeathTime() const { return death_time; }
@@ -104,10 +105,10 @@ class HeapObject
 
   static HeapMap theHeap;
 
-  // -- Global heap
+  // Global heap
   static HeapObject * DemandHeapObject(int object_id);
 
-  // -- Disjoint sets operations
+  // Disjoint sets operations
 
   static HeapObject * Find(HeapObject * obj);
   static HeapObject * Union(HeapObject * one, HeapObject * two);
@@ -115,4 +116,5 @@ class HeapObject
 
   void setPointsTo(HeapObject * target);
 };
-#endif
+}  // namespace et_simulator
+#endif  // ET2_SIMULATOR_SIMULATOR_HEAP_H

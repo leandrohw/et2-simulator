@@ -1,5 +1,6 @@
-#include "simulator.h"
+#include "simulator/simulator.h"
 
+namespace et_simulator {
 void Simulator::read_trace_file(std::ifstream & in) {
   int64_t record_count = 0;
   char kind;
@@ -14,7 +15,6 @@ void Simulator::read_trace_file(std::ifstream & in) {
   int root_id;
 
   while (!in.eof()) {
-
     in >> kind;
     if (in.fail())
       break;
@@ -137,7 +137,6 @@ void Simulator::read_trace_file(std::ifstream & in) {
 // }
 
 void Simulator::simulate() {
-
   std::ifstream name_file;
   name_file.open(namesfile);
 
@@ -156,7 +155,5 @@ void Simulator::simulate() {
   read_trace_file(in);
 }
 
-void Simulator::report() {
-
-
-}
+void Simulator::report() {}
+}  // namespace et_simulator

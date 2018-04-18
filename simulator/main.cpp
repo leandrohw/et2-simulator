@@ -1,4 +1,4 @@
-#include "simulator.h"
+#include "simulator/simulator.h"
 
 int main(int argc, char * argv[])
 {
@@ -7,6 +7,6 @@ int main(int argc, char * argv[])
     exit(0);
   }
 
-  Simulator * simulator = new Simulator(argv[1], argv[2]);
-  simulator -> simulate();
+  et_simulator::Simulator simulator(argv[1], argv[2]);
+  simulator.simulate();
 }
