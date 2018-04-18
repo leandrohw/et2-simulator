@@ -91,10 +91,10 @@ void CCTree::handle_method_entry(int method_id, int object_id, int thread_id) {
                 << " in context";
       logStack(curContext);
     } else {
+      curContext = root;
       LOG(INFO) << "Problem: no threadStart for thread id 0x" << std::hex
                 << thread_id << std::dec;
     }
-    curContext = root;
   }
 
 
