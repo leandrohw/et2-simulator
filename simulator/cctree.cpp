@@ -124,7 +124,7 @@ void CCTree::handle_method_entry(int method_id, int object_id, int thread_id) {
 void CCTree::handle_method_exit(int method_id, int object_id, int thread_id) {
   CCNode * curContext = theStack[thread_id];
   if (theStack.find(thread_id) == theStack.end()) {
-    std::cout << "Never seen thread 0x" << std::hex << thread_id;
+    LOG(INFO) << "Never seen thread 0x" << std::hex << thread_id;
   }
 
   if (curContext == 0) {
@@ -199,7 +199,7 @@ void CCTree::logStack(CCNode* node)
   while (cur) {
     LOG(INFO) << "  " << cur->getMethodFullName()
               << "(0x" << std::hex << cur->getMethodId()
-              << std::dec << ")" << std::endl;
+              << std::dec << ")";
 
     cur = cur->getParent();
   }
