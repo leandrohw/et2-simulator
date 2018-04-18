@@ -97,7 +97,6 @@ void CCTree::handle_method_entry(int method_id, int object_id, int thread_id) {
     }
   }
 
-
   time++;
   depth++;
 
@@ -105,12 +104,10 @@ void CCTree::handle_method_entry(int method_id, int object_id, int thread_id) {
   curContext->incCalls();
   theStack[thread_id] = curContext;
 
-  if (new_thread) {
-    LOG(INFO) << "Enter " << curContext->getMethodFullName() << " 0x"
-               << std::hex << method_id << " thread 0x" << thread_id << std::dec
-               << " at time " << time;
-      logStack(curContext);
-  }
+  LOG(INFO) << "Enter " << curContext->getMethodFullName() << " 0x"
+            << std::hex << method_id << " thread 0x" << thread_id << std::dec
+            << " at time " << time;
+  logStack(curContext);
 
   if (method_id == thread_start_method_id) {
     // Found a new thread start
