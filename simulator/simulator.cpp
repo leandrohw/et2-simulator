@@ -86,7 +86,7 @@ bool Simulator::execute(std::string line) {
         // -- Throw out roots for now
         return true;
       default:
-        LOG(INFO) << "UNKNOWN"
+        LOG(INFO) << "UNKNOWN";
     }
     return false;
 }
@@ -101,27 +101,20 @@ void Simulator::read_trace_file() {
   if(!tracefile.empty()) {
     std::ifstream in;
     in.open(tracefile);
+
     if (in.fail()) {
       LOG(FATAL) << "Failed to open name file " << tracefile;
     }
-    read_trace_file(in);
 
     while (!in.eof()) {
-      if (record_count % 1000000 == 0) {
-        std::cerr << "At " << record_count << std::endl;
-      }
-
+      LOG_EVERY_N(INFO, 1000000) << "At " << record_count;
       getline(in, line);
 
-      if (in.fail())
-        break;
-
       if(!execute(line)) {
-        exit(EXIT_FAILURE);
+        LOG(FATAL) << "Parsing event " << line << " failed.";
       }
 
       record_count++;
-      LOG_EVERY_N(INFO, 1000000) << "At " << record_count;
     }
 
   } else {
