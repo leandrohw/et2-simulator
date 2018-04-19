@@ -78,12 +78,10 @@ void CCTree::handle_object_update(int old_target, int object_id,
 
 void CCTree::handle_method_entry(int method_id, int object_id, int thread_id) {
   CCNode * curContext = theStack[thread_id];
-  bool new_thread = false;
   if (curContext == 0) {
     // Spawning a new thread -- look up where the thread started.
     // Relies on the fact that the thread_id is the same as the
     // object_id of the Thread object instance.
-    new_thread = true;
     curContext = threadStarts[thread_id];
     if (curContext) {
       LOG(INFO) << "Spawn thread 0x" << std::hex << thread_id << std::dec
