@@ -1,4 +1,5 @@
 #include "simulator/simulator.h"
+#include "glog/logging.h"
 
 namespace et_simulator {
 void Simulator::read_trace_file(std::ifstream & in) {
@@ -61,16 +62,14 @@ void Simulator::read_trace_file(std::ifstream & in) {
         break;
 
       default:
-        std::cout << "UNKNOWN" << std::endl;
+        LOG(INFO) << "UNKNOWN";
         break;
     }
 
     getline(in, line);
 
     record_count++;
-    if (record_count % 1000000 == 0) {
-      std::cerr << "At " << record_count << std::endl;
-    }
+    LOG_EVERY_N(INFO, 1000000) << "At " << record_count;
   }
 }
 
@@ -137,23 +136,28 @@ void Simulator::read_trace_file(std::ifstream & in) {
 // }
 
 void Simulator::simulate() {
-  std::ifstream name_file;
-  name_file.open(namesfile);
-
-  if (name_file.fail()) {
-    std::cout << "Failed to open name file " << namesfile << std::endl;
-    exit(EXIT_FAILURE);
+  if (!namesfile.empty()) {
+    std::ifstream name_file;
+    name_file.open(namesfile);
+    if (name_file.fail()) {
+      LOG(FATAL) << "Failed to open name file " << namesfile << std::endl;
+    }
+  } else {
+    LOG(INFO) << "Names file was not specified";
   }
 
-  std::ifstream in;
-  in.open(tracefile);
-  if (in.fail()) {
-    std::cout << "Failed to open name file " << tracefile << std::endl;
-    exit(EXIT_FAILURE);
+  if(!tracefile.empty()) {
+    std::ifstream in;
+    in.open(tracefile);
+    if (in.fail()) {
+      LOG(FATAL) << "Failed to open name file " << tracefile << std::endl;
+    }
+    read_trace_file(in);
+  } else {
+    LOG(INFO) << "Traces file was not specified.";
   }
-
-  read_trace_file(in);
 }
 
 void Simulator::report() {}
+
 }  // namespace et_simulator
