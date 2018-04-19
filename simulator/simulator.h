@@ -52,9 +52,6 @@ class Simulator
   bool parse_object_update(std::vector<std::string> trace);
   bool parse_method(std::vector<std::string> trace);
 
-  // Executes trace event
-  bool execute(std::string line);
-
  public:
   Simulator(std::string tf, std::string nf) :
   tracefile(tf),
@@ -62,7 +59,16 @@ class Simulator
     tree = new CCTree();
   }
 
+  // Executes an individual trace event
+  bool execute(std::string line);
+  // Simulates the entire heap from a traces file
   void simulate();
+
+  std::string getTraceFile() const { return tracefile; }
+  std::string getNamesFile() const { return namesfile; }
+
+  void setTraceFile(std::string tf) { tracefile = tf; }
+  void setNamesFile(std::string nf) { namesfile = nf; }
 
 };
 }  //  namespace et_simulator
