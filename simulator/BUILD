@@ -19,7 +19,6 @@ cc_library(
     visibility = ["//visibility:public"],
     deps = [
         ":ccnode",
-        "@com_google_absl//absl/strings",
     ],
 )
 
@@ -33,7 +32,6 @@ cc_library(
     deps = [
         ":ccnode",
         ":heap",
-        "@com_google_absl//absl/strings",
     ],
 )
 
@@ -44,7 +42,6 @@ cc_library(
     visibility = ["//visibility:public"],
     deps = [
         ":cctree",
-        "@com_google_absl//absl/strings",
     ],
 )
 
