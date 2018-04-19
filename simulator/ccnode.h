@@ -1,9 +1,7 @@
 #ifndef ET2_SIMULATOR_SIMULATOR_CCNODE_H_
 #define ET2_SIMULATOR_SIMULATOR_CCNODE_H_
 
-
 #include <stdlib.h>
-
 #include <iostream>
 #include <fstream>
 #include <vector>

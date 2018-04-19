@@ -4,7 +4,6 @@
 #include "absl/strings/numbers.h"
 #include "glog/logging.h"
 
-
 namespace et_simulator {
 bool Simulator::parse_object_allocation(std::vector<std::string> trace) {
   if(trace.size() != 5) {

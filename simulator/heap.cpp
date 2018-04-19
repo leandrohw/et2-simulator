@@ -50,7 +50,6 @@ HeapObject * HeapObject::Union(HeapObject * one, HeapObject * two) {
     new_root = one_root;
   }
 
-
   return new_root;
 }
 
