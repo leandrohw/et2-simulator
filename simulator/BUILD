@@ -6,7 +6,10 @@ cc_library(
         "method.h",
     ],
     visibility = ["//visibility:public"],
-    deps = ["@com_google_absl//absl/strings"],
+    deps = [
+        "@com_google_absl//absl/strings",
+        "@com_google_glog//:glog",
+    ],
 )
 
 cc_library(
@@ -16,7 +19,6 @@ cc_library(
     visibility = ["//visibility:public"],
     deps = [
         ":ccnode",
-        "@com_google_absl//absl/strings",
     ],
 )
 
@@ -30,7 +32,6 @@ cc_library(
     deps = [
         ":ccnode",
         ":heap",
-        "@com_google_absl//absl/strings",
     ],
 )
 
@@ -41,7 +42,6 @@ cc_library(
     visibility = ["//visibility:public"],
     deps = [
         ":cctree",
-        "@com_google_absl//absl/strings",
     ],
 )
 

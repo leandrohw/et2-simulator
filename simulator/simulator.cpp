@@ -2,6 +2,7 @@
 #include "absl/strings/str_join.h"
 #include "absl/strings/str_split.h"
 #include "absl/strings/numbers.h"
+#include "glog/logging.h"
 
 
 namespace et_simulator {
@@ -84,9 +85,9 @@ bool Simulator::execute(std::string line) {
       case 'R':
         // -- Throw out roots for now
         return true;
+      default:
+        LOG(INFO) << "UNKNOWN"
     }
-
-    std::cout << "UNKNOWN" << std::endl;
     return false;
 }
 
@@ -97,27 +98,34 @@ void Simulator::read_trace_file() {
   std::ifstream in;
   in.open(tracefile);
 
-  if (in.fail()) {
-    std::cout << "Failed to open name file " << tracefile << std::endl;
-    exit(EXIT_FAILURE);
-  }
+  if(!tracefile.empty()) {
+    std::ifstream in;
+    in.open(tracefile);
+    if (in.fail()) {
+      LOG(FATAL) << "Failed to open name file " << tracefile;
+    }
+    read_trace_file(in);
 
+    while (!in.eof()) {
+      if (record_count % 1000000 == 0) {
+        std::cerr << "At " << record_count << std::endl;
+      }
 
-  while (!in.eof()) {
-    if (record_count % 1000000 == 0) {
-      std::cerr << "At " << record_count << std::endl;
+      getline(in, line);
+
+      if (in.fail())
+        break;
+
+      if(!execute(line)) {
+        exit(EXIT_FAILURE);
+      }
+
+      record_count++;
+      LOG_EVERY_N(INFO, 1000000) << "At " << record_count;
     }
 
-    getline(in, line);
-
-    if (in.fail())
-      break;
-
-    if(!execute(line)) {
-      exit(EXIT_FAILURE);
-    }
-
-    record_count++;
+  } else {
+    LOG(INFO) << "Traces file was not specified.";
   }
 }
 
@@ -200,5 +208,4 @@ void Simulator::simulate() {
 void Simulator::report() {
   // TODO(leandrohw): decide how to output data
 }
-
 }  // namespace et_simulator
