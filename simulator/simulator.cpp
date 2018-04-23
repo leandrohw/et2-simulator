@@ -6,7 +6,7 @@
 
 namespace et_simulator {
 bool Simulator::parse_object_allocation(std::vector<std::string> trace) {
-  if(trace.size() != 5) {
+  if (trace.size() != 5) {
     return false;
   }
 
