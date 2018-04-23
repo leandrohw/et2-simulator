@@ -22,6 +22,8 @@ class CCTree {
   int64_t no_alloc = 0;
 
   int thread_start_method_id = 0;
+  int last_method_id = 0;
+
   int64_t thread_number = 0;
 
 
@@ -46,8 +48,7 @@ class CCTree {
   int64_t getLastThreadId() { return last_thread_id; }
 
   void handle_object_allocation(int object_id, int size,
-                                        std::string type, int thread_id,
-                                        int method_id);
+                                std::string type, int thread_id);
   void handle_object_death(int object_id);
   void handle_object_update(int old_target, int object_id,
                             int new_target, int target_id);

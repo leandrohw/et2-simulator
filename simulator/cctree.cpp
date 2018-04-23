@@ -5,15 +5,14 @@
 namespace et_simulator {
 int debug = 0;
 void CCTree::handle_object_allocation(int object_id, int size,
-                                      std::string type, int thread_id,
-                                      int method_id) {
+                                      std::string type, int thread_id) {
   CCNode * curContext = 0;
 
   if (thread_id == object_id) {
     // Spawning a new thread
     // Make it a child of the root
     curContext = root;
-    CCNode * newContext = curContext->demand_child(method_id,
+    CCNode * newContext = curContext->demand_child(last_method_id,
                                                    thread_id,
                                                    time);
     newContext->incCalls();
@@ -78,6 +77,7 @@ void CCTree::handle_object_update(int old_target, int object_id,
 
 void CCTree::handle_method_entry(int method_id, int object_id, int thread_id) {
   CCNode * curContext = theStack[thread_id];
+  last_method_id = method_id;
   if (curContext == 0) {
     // Spawning a new thread -- look up where the thread started.
     // Relies on the fact that the thread_id is the same as the
@@ -121,6 +121,8 @@ void CCTree::handle_method_entry(int method_id, int object_id, int thread_id) {
 
 void CCTree::handle_method_exit(int method_id, int object_id, int thread_id) {
   CCNode * curContext = theStack[thread_id];
+  last_method_id = method_id;
+
   if (theStack.find(thread_id) == theStack.end()) {
     LOG(INFO) << "Never seen thread 0x" << std::hex << thread_id;
   }

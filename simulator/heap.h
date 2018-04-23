@@ -75,6 +75,8 @@ class HeapObject
 
   bool isLive() const { return live; }
 
+  int get_allocation_bytes() { return bytes; }
+
   int getAllocTime() const { return alloc_time; }
   int getDeathTime() const { return death_time; }
 

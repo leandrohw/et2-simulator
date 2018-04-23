@@ -18,13 +18,29 @@ namespace et_simulator {
 class Simulator
 {
  private:
+  // Context tree
   CCTree * tree;
 
+  // Name of the files
   std::string tracefile;
   std::string namesfile;
 
-  void read_name_file(std::ifstream & name_file);
-  void read_trace_file(std::ifstream & in);
+  // --------------
+  // Helper methods
+  // --------------
+
+  // Handles input
+  void read_name_file();
+  void read_trace_file();
+
+  // Handles output
+  void report();
+
+  // Parses and validates trace events
+  bool parse_object_allocation(std::vector<std::string> trace);
+  bool parse_object_update(std::vector<std::string> trace);
+  bool parse_method_entry(std::vector<std::string> trace);
+  bool parse_method_exit(std::vector<std::string> trace);
 
  public:
   Simulator(std::string tf, std::string nf) :
@@ -33,8 +49,17 @@ class Simulator
     tree = new CCTree();
   }
 
+  // Executes an individual trace event
+  bool execute(std::string line);
+  // Simulates the entire heap from a traces file
   void simulate();
-  void report();
+
+  std::string getTraceFile() const { return tracefile; }
+  std::string getNamesFile() const { return namesfile; }
+
+  void setTraceFile(std::string tf) { tracefile = tf; }
+  void setNamesFile(std::string nf) { namesfile = nf; }
+
 };
 }  //  namespace et_simulator
 #endif  //  ET2_SIMULATOR_SIMULATOR_SIMULATOR_H_
