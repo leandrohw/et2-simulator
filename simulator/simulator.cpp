@@ -15,7 +15,7 @@ bool Simulator::parse_object_allocation(std::vector<std::string> trace) {
   int size;
   int thread_id;
 
-  if(absl::SimpleAtoi(trace[1], &object_id) &&
+  if (absl::SimpleAtoi(trace[1], &object_id) &&
      absl::SimpleAtoi(trace[2], &size) &&
      absl::SimpleAtoi(trace[4], &thread_id)) {
     tree->handle_object_allocation(object_id, size,
@@ -26,7 +26,7 @@ bool Simulator::parse_object_allocation(std::vector<std::string> trace) {
 }
 
 bool Simulator::parse_object_update(std::vector<std::string> trace) {
-  if(trace.size() != 5) {
+  if (trace.size() != 5) {
     return false;
   }
 
@@ -47,7 +47,7 @@ bool Simulator::parse_object_update(std::vector<std::string> trace) {
 }
 
 bool Simulator::parse_method_entry(std::vector<std::string> trace) {
-  if(trace.size() != 4) {
+  if (trace.size() != 4) {
     return false;
   }
 
@@ -65,7 +65,7 @@ bool Simulator::parse_method_entry(std::vector<std::string> trace) {
 }
 
 bool Simulator::parse_method_exit(std::vector<std::string> trace) {
-  if(trace.size() != 4) {
+  if (trace.size() != 4) {
     return false;
   }
 
@@ -86,7 +86,7 @@ bool Simulator::parse_method_exit(std::vector<std::string> trace) {
 bool Simulator::execute(std::string line) {
     std::vector<std::string> trace = absl::StrSplit(line, ' ');
 
-    if(trace.size() < 1 || trace[0].length() != 1) {
+    if (trace.size() < 1 || trace[0].length() != 1) {
       return false;
     }
 
@@ -117,7 +117,7 @@ void Simulator::read_trace_file() {
   std::ifstream in;
   in.open(tracefile);
 
-  if(!tracefile.empty()) {
+  if (!tracefile.empty()) {
     std::ifstream in;
     in.open(tracefile);
 
@@ -129,7 +129,7 @@ void Simulator::read_trace_file() {
       LOG_EVERY_N(INFO, 1000000) << "At " << record_count;
       getline(in, line);
 
-      if(!execute(line)) {
+      if (!execute(line)) {
         LOG(FATAL) << "Parsing event " << line << " failed.";
       }
 

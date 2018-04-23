@@ -20,7 +20,6 @@ class Simulator
  private:
   // Context tree
   CCTree * tree;
-  int currentMethod;
 
   // Name of the files
   std::string tracefile;
