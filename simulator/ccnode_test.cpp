@@ -13,7 +13,7 @@ TEST(CCNodeTest, Constructor) {
   EXPECT_EQ(node.get_allocated_objects(), 0);
   EXPECT_EQ(node.get_dead_bytes(), 0);
   EXPECT_EQ(node.get_dead_objects(), 0);
-  EXPECT_EQ(node.get_total_allocated_objects(), 0);
+  EXPECT_EQ(node.get_total_allocated_bytes(), 0);
   EXPECT_EQ(node.get_total_dead_bytes(), 0);
   EXPECT_EQ(node.get_allocated_rank(), 0);
 }
@@ -58,5 +58,5 @@ TEST(CCNodeTest, DemandingChildBytes) {
   child->IncrementAllocatedBytes(16);
   node.ComputeTotals();
   EXPECT_EQ(node.get_allocated_bytes(), 32);
-  EXPECT_EQ(node.get_total_allocated_objects(), 48);
+  EXPECT_EQ(node.get_total_allocated_bytes(), 48);
 }
