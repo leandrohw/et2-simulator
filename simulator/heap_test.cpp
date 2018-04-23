@@ -14,7 +14,7 @@ TEST(HeapTest, Constructor){
   EXPECT_EQ(heapObj.getParent(), nullptr);
   EXPECT_EQ(heapObj.getRank(), 0);
   EXPECT_TRUE(heapObj.isRoot());
-  EXPECT_EQ(heapObj.getSize(), 0);
+  EXPECT_EQ(heapObj.get_allocation_bytes(), -1);
   EXPECT_EQ(heapObj.getNumDead(), 0);
 }
 

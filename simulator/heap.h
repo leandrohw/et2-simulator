@@ -24,6 +24,7 @@ class HeapObject
  private:
   int id;
   std::string type;
+  int bytes;
   bool live;
 
   int alloc_time;
@@ -44,6 +45,7 @@ class HeapObject
   HeapObject(int i)
     : id(i),
       type("UNKNOWN"),
+      bytes(-1),
       live(true),
       alloc_time(-1),
       alloc_cc(0),
@@ -52,7 +54,7 @@ class HeapObject
       parent(0),
       rank(0),
       pointsTo(0),
-      size(0),
+      size(1),
       num_dead(0)
   {}
 
@@ -62,7 +64,7 @@ class HeapObject
 
   void setAlloc(int a_time, int sz, const std::string & ty) {
     alloc_time = a_time;
-    size = sz;
+    bytes = sz;
     type = ty;
   }
 
@@ -72,6 +74,8 @@ class HeapObject
   }
 
   bool isLive() const { return live; }
+
+  int get_allocation_bytes() { return bytes; }
 
   int getAllocTime() const { return alloc_time; }
   int getDeathTime() const { return death_time; }

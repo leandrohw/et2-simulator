@@ -44,7 +44,7 @@ TEST(SimulatorTest, Executions) {
   et_simulator::CCNode* ccnode  = heapObj->getAllocCC();
   EXPECT_EQ(heapObj->getId(), 21);
   EXPECT_EQ(heapObj->getType(), "type");
-  EXPECT_EQ(heapObj->getSize(), 16);
+  EXPECT_EQ(heapObj->get_allocation_bytes(), 16);
 
   EXPECT_EQ(ccnode->getMethodId(), 474);
   EXPECT_EQ(ccnode->getThreadId(), 1000);
