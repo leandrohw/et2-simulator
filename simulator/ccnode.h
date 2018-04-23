@@ -106,7 +106,7 @@ class CCNode
   int get_dead_objects() const { return dead_objects; }
 
   void IncrementTotalAllocatedBytes(int total) { total_alloc_bytes += total; }
-  int get_total_allocated_objects() const { return total_alloc_bytes; }
+  int get_total_allocated_bytes() const { return total_alloc_bytes; }
 
   void IncrementTotalAllocatedObjects(int total) { total_alloc_objects += total; }
   int get_total_allocated_objects() const { return total_alloc_objects; }

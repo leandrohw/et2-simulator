@@ -18,7 +18,7 @@ bool Simulator::parse_object_allocation(std::vector<std::string> trace) {
   if (absl::SimpleAtoi(trace[1], &object_id) &&
      absl::SimpleAtoi(trace[2], &size) &&
      absl::SimpleAtoi(trace[4], &thread_id)) {
-    tree->handle_object_allocation(object_id, size,
+    tree->HandleObjectAllocation(object_id, size,
                                    type, thread_id);
     return true;
   }
@@ -39,7 +39,7 @@ bool Simulator::parse_object_update(std::vector<std::string> trace) {
       absl::SimpleAtoi(trace[2], &object_id) &&
       absl::SimpleAtoi(trace[3], &new_target) &&
       absl::SimpleAtoi(trace[4], &thread_id)) {
-    tree->handle_object_update(old_target, object_id,
+    tree->HandleObjectUpdate(old_target, object_id,
                                new_target, thread_id);
     return true;
   }
@@ -58,7 +58,7 @@ bool Simulator::parse_method_entry(std::vector<std::string> trace) {
   if (absl::SimpleAtoi(trace[1], &method_id)&&
       absl::SimpleAtoi(trace[2], &object_id) &&
       absl::SimpleAtoi(trace[3], &thread_id)) {
-    tree->handle_method_entry(method_id, object_id, thread_id);
+    tree->HandleMethodEntry(method_id, object_id, thread_id);
     return true;
   }
   return false;
@@ -76,7 +76,7 @@ bool Simulator::parse_method_exit(std::vector<std::string> trace) {
   if (absl::SimpleAtoi(trace[1], &method_id)&&
       absl::SimpleAtoi(trace[2], &object_id) &&
       absl::SimpleAtoi(trace[3], &thread_id)){
-    tree->handle_method_exit(method_id, object_id, thread_id);
+    tree->HandleMethodExit(method_id, object_id, thread_id);
     return true;
   }
 

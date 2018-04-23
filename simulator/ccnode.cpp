@@ -39,7 +39,7 @@ void CCNode::ComputeTotals()
       CCNode * child = (*p);
       child->ComputeTotals();
 
-      IncrementTotalAllocatedBytes(child->get_total_allocated_objects());
+      IncrementTotalAllocatedBytes(child->get_total_allocated_bytes());
       IncrementTotalAllocatedObjects(child->get_total_allocated_objects());
       IncrementTotalDeadBytes(child->get_total_dead_bytes());
       IncrementTotalDeadObjects(child->get_total_dead_objects());
@@ -75,7 +75,7 @@ void CCNode::CollectNodes(CCNodeVector & all)
 
 bool compareNodes(CCNode * one, CCNode * two)
 {
-  return one->get_total_allocated_objects() < two->get_total_allocated_objects();
+  return one->get_total_allocated_bytes() < two->get_total_allocated_bytes();
 }
 
 void CCNode::RankNodes()
