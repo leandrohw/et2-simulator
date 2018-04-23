@@ -56,7 +56,7 @@ bool Simulator::parse_method_entry(std::vector<std::string> trace) {
   int thread_id;
 
   if (absl::SimpleAtoi(trace[1], &method_id)&&
-          absl::SimpleAtoi(trace[2], &object_id) &&
+      absl::SimpleAtoi(trace[2], &object_id) &&
       absl::SimpleAtoi(trace[3], &thread_id)) {
     tree->handle_method_entry(method_id, object_id, thread_id);
     return true;
