@@ -48,10 +48,10 @@ void CCNode::ComputeTotals()
 
 std::string CCNode::GetMethodFullName()
 {
-  Method * meth = Method::getMethod(get_method_id());
+  Method * method = Method::getMethod(get_method_id());
   std::string result;
-  if (meth)
-    result = meth->getClassName() + "::" + meth->getMethodName();
+  if (method)
+    result = method->getClassName() + "::" + method->getMethodName();
   else
     result = "ENTRY";
 

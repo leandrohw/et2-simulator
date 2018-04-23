@@ -9,13 +9,13 @@ namespace et_simulator {
 class CCTree {
  private:
   CCNode * root;
-  std::map<int, int> threadIdNumbering;
+  std::map<int, int> thread_id_map;
 
   //  Multi-threaded stack
   typedef std::map<int, CCNode *> StackMap;
-  StackMap theStack;
+  StackMap stack;
   //  Map from thread objects to the context in which start() was called
-  StackMap threadStarts;
+  StackMap thread_starts;
 
   //  Global counters
   int64_t total_alloc_size = 0;
@@ -38,8 +38,8 @@ class CCTree {
   CCTree() {
     root = new CCNode(0, 0, 0, 0);
     last_thread_id = 0;
-    theStack[0] = root;
-    threadStarts[0] = root;
+    stack[0] = root;
+    thread_starts[0] = root;
   }
 
   int get_depth() { return depth; }
