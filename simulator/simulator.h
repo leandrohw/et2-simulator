@@ -20,21 +20,11 @@ class Simulator
  private:
   // Context tree
   CCTree * tree;
+  int currentMethod;
 
   // Name of the files
   std::string tracefile;
   std::string namesfile;
-
-  // Simulation values
-  char kind;
-  std::string type;
-  int object_id;
-  int method_id;
-  int size;
-  int thread_id;
-  int old_target;
-  int new_target;
-  int root_id;
 
   // --------------
   // Helper methods
@@ -50,7 +40,8 @@ class Simulator
   // Parses and validates trace events
   bool parse_object_allocation(std::vector<std::string> trace);
   bool parse_object_update(std::vector<std::string> trace);
-  bool parse_method(std::vector<std::string> trace);
+  bool parse_method_entry(std::vector<std::string> trace);
+  bool parse_method_exit(std::vector<std::string> trace);
 
  public:
   Simulator(std::string tf, std::string nf) :

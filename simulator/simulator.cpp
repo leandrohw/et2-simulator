@@ -10,12 +10,19 @@ bool Simulator::parse_object_allocation(std::vector<std::string> trace) {
     return false;
   }
 
-  type = trace[3];
+  std::string type = trace[3];
+  int object_id;
+  int size;
+  int thread_id;
 
-  return (absl::SimpleAtoi(trace[1], &object_id) &&
-          absl::SimpleAtoi(trace[2], &size) &&
-          absl::SimpleAtoi(trace[4], &thread_id));
-
+  if(absl::SimpleAtoi(trace[1], &object_id) &&
+     absl::SimpleAtoi(trace[2], &size) &&
+     absl::SimpleAtoi(trace[4], &thread_id)) {
+    tree->handle_object_allocation(object_id, size,
+                                   type, thread_id);
+    return true;
+  }
+  return false;
 }
 
 bool Simulator::parse_object_update(std::vector<std::string> trace) {
@@ -23,22 +30,58 @@ bool Simulator::parse_object_update(std::vector<std::string> trace) {
     return false;
   }
 
-  return (absl::SimpleAtoi(trace[1], &old_target) &&
-          absl::SimpleAtoi(trace[2], &object_id) &&
-          absl::SimpleAtoi(trace[3], &new_target) &&
-          absl::SimpleAtoi(trace[4], &thread_id));
+  int old_target;
+  int object_id;
+  int new_target;
+  int thread_id;
+
+  if (absl::SimpleAtoi(trace[1], &old_target) &&
+      absl::SimpleAtoi(trace[2], &object_id) &&
+      absl::SimpleAtoi(trace[3], &new_target) &&
+      absl::SimpleAtoi(trace[4], &thread_id)) {
+    tree->handle_object_update(old_target, object_id,
+                               new_target, thread_id);
+    return true;
+  }
+  return false;
 }
 
-bool Simulator::parse_method(std::vector<std::string> trace) {
+bool Simulator::parse_method_entry(std::vector<std::string> trace) {
   if(trace.size() != 4) {
     return false;
   }
 
-  return (absl::SimpleAtoi(trace[1], &method_id)&&
+  int method_id;
+  int object_id;
+  int thread_id;
+
+  if (absl::SimpleAtoi(trace[1], &method_id)&&
           absl::SimpleAtoi(trace[2], &object_id) &&
-          absl::SimpleAtoi(trace[3], &thread_id));
+      absl::SimpleAtoi(trace[3], &thread_id)) {
+    tree->handle_method_entry(method_id, object_id, thread_id);
+    return true;
+  }
+  return false;
 }
 
+bool Simulator::parse_method_exit(std::vector<std::string> trace) {
+  if(trace.size() != 4) {
+    return false;
+  }
+
+  int method_id;
+  int object_id;
+  int thread_id;
+
+  if (absl::SimpleAtoi(trace[1], &method_id)&&
+      absl::SimpleAtoi(trace[2], &object_id) &&
+      absl::SimpleAtoi(trace[3], &thread_id)){
+    tree->handle_method_exit(method_id, object_id, thread_id);
+    return true;
+  }
+
+  return false;
+}
 
 bool Simulator::execute(std::string line) {
     std::vector<std::string> trace = absl::StrSplit(line, ' ');
@@ -47,40 +90,17 @@ bool Simulator::execute(std::string line) {
       return false;
     }
 
-    kind = trace[0][0];
+    char kind = trace[0][0];
 
     switch (kind) {
       case 'A':
-        if(!parse_object_allocation(trace)) {
-           // Log bad allocation entry
-          return false;
-        }
-
-        tree->handle_object_allocation(object_id, size, type,
-                                       thread_id, method_id);
-        return true;
+        return parse_object_allocation(trace);
       case 'U':
-        if(!parse_object_update(trace)) {
-          // Log bad update entry
-          return false;
-        }
-        tree->handle_object_update(old_target, object_id,
-                                   new_target, thread_id);
-        return true;
+        return parse_object_update(trace);
       case 'M':
-        if(!parse_method(trace)) {
-          // Log bad method entry name
-          return false;
-        }
-        tree->handle_method_entry(method_id, object_id, thread_id);
-        return true;
+        return parse_method_entry(trace);
       case 'E':
-        if(! parse_method(trace)) {
-          // Log bad entry name
-          return false;
-        }
-        tree->handle_method_exit(method_id, object_id, thread_id);
-        return true;
+        return parse_method_exit(trace);
       case 'R':
         // -- Throw out roots for now
         return true;
