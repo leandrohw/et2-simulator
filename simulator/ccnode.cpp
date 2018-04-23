@@ -4,7 +4,7 @@ namespace et_simulator {
 MethodMap Method::allMethods;
 int CCNode::count = 0;
 
-CCNode * CCNode::demand_child(int id, int thread_id, int time)
+CCNode * CCNode::DemandChild(int id, int thread_id, int time)
 {
   for (CCNodeVector::iterator p = children.begin();
     p != children.end();

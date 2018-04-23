@@ -13,7 +13,7 @@ void CCTree::handle_object_allocation(int object_id, int size,
     // Spawning a new thread
     // Make it a child of the root
     curContext = root;
-    CCNode * newContext = curContext->demand_child(method_id,
+    CCNode * newContext = curContext->DemandChild(method_id,
                                                    thread_id,
                                                    time);
     newContext->incCalls();
@@ -98,7 +98,7 @@ void CCTree::handle_method_entry(int method_id, int object_id, int thread_id) {
   time++;
   depth++;
 
-  curContext = curContext->demand_child(method_id, thread_id, time);
+  curContext = curContext->DemandChild(method_id, thread_id, time);
   curContext->incCalls();
   theStack[thread_id] = curContext;
 

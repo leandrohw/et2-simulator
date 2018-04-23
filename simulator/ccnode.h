@@ -69,7 +69,7 @@ class CCNode
 
   // Fields
 
-  CCNode * demand_child(int id, int thread_id, int time);
+  CCNode * DemandChild(int id, int thread_id, int time);
 
   int getMethodId() const { return method_id; }
 
