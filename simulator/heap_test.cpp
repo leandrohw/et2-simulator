@@ -11,7 +11,7 @@ TEST(HeapTest, Constructor){
   EXPECT_EQ(heapObj.getAllocCC(), nullptr);
   EXPECT_EQ(heapObj.getDeathTime(), -1);
   EXPECT_EQ(heapObj.getDeathCC(), nullptr);
-  EXPECT_EQ(heapObj.getParent(), nullptr);
+  EXPECT_EQ(heapObj.get_parent(), nullptr);
   EXPECT_EQ(heapObj.getRank(), 0);
   EXPECT_TRUE(heapObj.isRoot());
   EXPECT_EQ(heapObj.get_allocation_bytes(), -1);
@@ -56,7 +56,7 @@ TEST(HeapTest, SetParent){
   et_simulator::HeapObject heapObj(10);
   et_simulator::HeapObject parent(0);
   heapObj.setParent(&parent);
-  EXPECT_EQ(heapObj.getParent(), &parent);
+  EXPECT_EQ(heapObj.get_parent(), &parent);
 }
 
 TEST(HeapTest, SetNumDead){

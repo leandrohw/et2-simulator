@@ -93,7 +93,7 @@ class HeapObject
     parent = new_parent;
   }
 
-  HeapObject * getParent() const { return parent; }
+  HeapObject * get_parent() const { return parent; }
   bool isRoot() const { return parent == 0; }
 
   HeapObject * getPointsTo() const { return pointsTo; }

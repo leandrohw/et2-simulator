@@ -67,58 +67,58 @@ class CCNode
 
   // Fields
 
-  CCNode * demand_child(int id, int thread_id, int time);
+  CCNode * DemandChild(int id, int thread_id, int time);
 
-  int getMethodId() const { return method_id; }
+  int get_method_id() const { return method_id; }
 
-  std::string getMethodFullName();
+  std::string GetMethodFullName();
 
-  int getThreadId() const { return thread_id; }
+  int get_thread_id() const { return thread_id; }
 
-  CCNode * getParent() const { return parent; }
+  CCNode * get_parent() const { return parent; }
 
-  const CCNodeVector & getChildren() const { return children; }
+  const CCNodeVector & get_children() const { return children; }
 
 
   // Accounting
 
-  void computeTotals();
-  void collectNodes(CCNodeVector & all);
-  void rankNodes();
+  void ComputeTotals();
+  void CollectNodes(CCNodeVector & all);
+  void RankNodes();
 
-  void incCalls() { calls++; }
-  int getCalls() const { return calls; }
+  void IncrementCalls() { calls++; }
+  int get_calls() const { return calls; }
 
-  void setLastCall(int time) { last_call = time; }
-  int getLastCall() const { return last_call; }
-  int getFirstCall() const { return first_call; }
+  void set_last_call(int time) { last_call = time; }
+  int get_last_call() const { return last_call; }
+  int get_first_call() const { return first_call; }
 
-  void incAllocBytes(int bytes) { alloc_bytes += bytes; }
-  int getAllocBytes() const { return alloc_bytes; }
+  void IncrementAllocatedBytes(int bytes) { alloc_bytes += bytes; }
+  int get_allocated_bytes() const { return alloc_bytes; }
 
-  void incAllocObjects() { alloc_objects++; }
-  int getAllocObjects() const { return alloc_objects; }
+  void IncrementAllocatedObjects() { alloc_objects++; }
+  int get_allocated_objects() const { return alloc_objects; }
 
-  void incDeadBytes(int bytes) { dead_bytes += bytes; }
-  int getDeadBytes() const { return dead_bytes; }
+  void IncrementDeadBytes(int bytes) { dead_bytes += bytes; }
+  int get_dead_bytes() const { return dead_bytes; }
 
-  void incDeadObjects() { dead_objects++; }
-  int getDeadObjects() const { return dead_objects; }
+  void IncrementDeadObjects() { dead_objects++; }
+  int get_dead_objects() const { return dead_objects; }
 
-  void incTotalAllocBytes(int total) { total_alloc_bytes += total; }
-  int getTotalAllocBytes() const { return total_alloc_bytes; }
+  void IncrementTotalAllocatedBytes(int total) { total_alloc_bytes += total; }
+  int get_total_allocated_objects() const { return total_alloc_bytes; }
 
-  void incTotalAllocObjects(int total) { total_alloc_objects += total; }
-  int getTotalAllocObjects() const { return total_alloc_objects; }
+  void IncrementTotalAllocatedObjects(int total) { total_alloc_objects += total; }
+  int get_total_allocated_objects() const { return total_alloc_objects; }
 
-  void incTotalDeadBytes(int total) { total_dead_bytes += total; }
-  int getTotalDeadBytes() const { return total_dead_bytes; }
+  void IncrementTotalDeadBytes(int total) { total_dead_bytes += total; }
+  int get_total_dead_bytes() const { return total_dead_bytes; }
 
-  void incTotalDeadObjects(int total) { total_dead_objects += total; }
-  int getTotalDeadObjects() const { return total_dead_objects; }
+  void IncrementTotalDeadObjects(int total) { total_dead_objects += total; }
+  int get_total_dead_objects() const { return total_dead_objects; }
 
-  void setAllocRank(int rank) { alloc_rank = rank; }
-  int getAllocRank() const { return alloc_rank; }
+  void set_allocated_rank(int rank) { alloc_rank = rank; }
+  int get_allocated_rank() const { return alloc_rank; }
 };
 }  // namespace et_simulator
 

@@ -5,7 +5,7 @@ namespace et_simulator {
 HeapMap HeapObject::theHeap;
 
 HeapObject * HeapObject::Find(HeapObject * obj) {
-  HeapObject * parent = obj->getParent();
+  HeapObject * parent = obj->get_parent();
   if (parent == 0)
     return obj;
 

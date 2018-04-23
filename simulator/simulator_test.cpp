@@ -46,6 +46,6 @@ TEST(SimulatorTest, Executions) {
   EXPECT_EQ(heapObj->getType(), "type");
   EXPECT_EQ(heapObj->get_allocation_bytes(), 16);
 
-  EXPECT_EQ(ccnode->getMethodId(), 474);
-  EXPECT_EQ(ccnode->getThreadId(), 1000);
+  EXPECT_EQ(ccnode->get_method_id(), 474);
+  EXPECT_EQ(ccnode->get_thread_id(), 1000);
 }
