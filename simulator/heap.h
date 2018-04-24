@@ -36,7 +36,7 @@ class HeapObject
   // union/find stuff
   HeapObject * parent;
   int rank;
-  HeapObject * pointsTo;
+  HeapObject * points_to;
 
   int size;
   int num_dead;
@@ -53,59 +53,59 @@ class HeapObject
       death_cc(0),
       parent(0),
       rank(0),
-      pointsTo(0),
+      points_to(0),
       size(1),
       num_dead(0)
   {}
 
-  int getId() const { return id; }
+  int get_id() const { return id; }
 
-  const std::string & getType() const { return type; }
+  const std::string & get_type() const { return type; }
 
-  void setAlloc(int a_time, int sz, const std::string & ty) {
+  void MarkAllocated(int a_time, int sz, const std::string & ty) {
     alloc_time = a_time;
     bytes = sz;
     type = ty;
   }
 
-  void setDead(int d_time) {
+  void MarkDead(int d_time) {
     live = false;
     death_time = d_time;
   }
 
-  bool isLive() const { return live; }
+  bool is_live() const { return live; }
 
   int get_allocation_bytes() { return bytes; }
 
-  int getAllocTime() const { return alloc_time; }
-  int getDeathTime() const { return death_time; }
+  int get_allocation_time() const { return alloc_time; }
+  int get_death_time() const { return death_time; }
 
-  CCNode * getAllocCC() const { return alloc_cc; }
-  void setAllocCC(CCNode * cc) { alloc_cc = cc; }
+  CCNode * get_allocation_context() const { return alloc_cc; }
+  void MarkAllocatedCC(CCNode * cc) { alloc_cc = cc; }
 
-  CCNode * getDeathCC() const { return death_cc; }
+  CCNode * get_death_context() const { return death_cc; }
   void setDeathCC(CCNode * cc) { death_cc = cc; }
 
-  void incRank() { rank++; }
-  int getRank() const { return rank; }
+  void IncrementRank() { rank++; }
+  int get_rank() const { return rank; }
 
-  void setParent(HeapObject * new_parent) {
+  void set_parent(HeapObject * new_parent) {
     parent = new_parent;
   }
 
   HeapObject * get_parent() const { return parent; }
-  bool isRoot() const { return parent == 0; }
+  bool is_root() const { return parent == 0; }
 
-  HeapObject * getPointsTo() const { return pointsTo; }
+  HeapObject * get_points_to() const { return points_to; }
 
-  void setSize(int new_size) { size = new_size; }
-  int getSize() const { return size; }
+  void set_size(int new_size) { size = new_size; }
+  int get_size() const { return size; }
 
-  void setNumDead(int nd) { num_dead = nd; }
-  void incNumDead() { num_dead++; }
-  int getNumDead() const { return num_dead; }
+  void set_number_of_dead_objects(int nd) { num_dead = nd; }
+  void IncrementNumberOfDeadObjects() { num_dead++; }
+  int get_number_of_dead_objects() const { return num_dead; }
 
-  static HeapMap theHeap;
+  static HeapMap heap;
 
   // Global heap
   static HeapObject * DemandHeapObject(int object_id);

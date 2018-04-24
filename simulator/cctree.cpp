@@ -31,8 +31,8 @@ void CCTree::HandleObjectAllocation(int object_id, int size,
   current_context->IncrementAllocatedObjects();
 
   HeapObject * heap_object = HeapObject::DemandHeapObject(object_id);
-  heap_object->setAlloc(time, size, type);
-  heap_object->setAllocCC(current_context);
+  heap_object->MarkAllocated(time, size, type);
+  heap_object->MarkAllocatedCC(current_context);
 
   LOG(INFO) <<  "Allocate 0x" << std::hex << object_id << " size 0x" << size << std::dec << " at time " << time;
   LogStack(current_context);
@@ -42,12 +42,12 @@ void CCTree::HandleObjectAllocation(int object_id, int size,
 
 void CCTree::HandleObjectDeath(int object_id) {
   HeapObject * heap_object = HeapObject::DemandHeapObject(object_id);
-  heap_object->setDead(time);
-  (HeapObject::Find(heap_object))->incNumDead();
+  heap_object->MarkDead(time);
+  (HeapObject::Find(heap_object))->IncrementNumberOfDeadObjects();
 
   CCNode * current_context = stack[last_thread_id];
 
-  current_context->IncrementDeadBytes(heap_object->getSize());
+  current_context->IncrementDeadBytes(heap_object->get_size());
   current_context->IncrementDeadObjects();
   heap_object->setDeathCC(current_context);
 }
@@ -58,13 +58,13 @@ void CCTree::HandleObjectUpdate(int old_target, int object_id,
     HeapObject * heap_object = HeapObject::DemandHeapObject(object_id);
     HeapObject * target_object = HeapObject::DemandHeapObject(new_target);
     HeapObject * target_root = HeapObject::Find(target_object);
-    if (target_object->getType() != "[C" &&
-        target_object->getType() != "UNKNOWN" &&
-        target_root->getId() != 0x19a) {
+    if (target_object->get_type() != "[C" &&
+        target_object->get_type() != "UNKNOWN" &&
+        target_root->get_id() != 0x19a) {
 
       LOG(INFO) << "Pointer from 0x" << std::hex << object_id << " "
-                << heap_object->getType() << " to 0x" << new_target
-                << std::dec << " " << target_object->getType() << " at time "
+                << heap_object->get_type() << " to 0x" << new_target
+                << std::dec << " " << target_object->get_type() << " at time "
                 << time;
 
       CCNode * current_context = stack[last_thread_id];

@@ -2,7 +2,7 @@
 
 namespace et_simulator {
 
-HeapMap HeapObject::theHeap;
+HeapMap HeapObject::heap;
 
 HeapObject * HeapObject::Find(HeapObject * obj) {
   HeapObject * parent = obj->get_parent();
@@ -10,7 +10,7 @@ HeapObject * HeapObject::Find(HeapObject * obj) {
     return obj;
 
   HeapObject * root = Find(parent);
-  obj->setParent(root);
+  obj->set_parent(root);
 
   return root;
 }
@@ -22,31 +22,31 @@ HeapObject * HeapObject::Union(HeapObject * one, HeapObject * two) {
   if (one_root == two_root)
     return one_root;
 
-  int new_size = one_root->getSize() + two_root->getSize();
-  int new_nd = one_root->getNumDead() + two_root->getNumDead();
+  int new_size = one_root->get_size() + two_root->get_size();
+  int new_nd = one_root->get_number_of_dead_objects() + two_root->get_number_of_dead_objects();
 
-  int one_rank = one_root->getRank();
-  int two_rank = two_root->getRank();
+  int one_rank = one_root->get_rank();
+  int two_rank = two_root->get_rank();
 
   HeapObject * new_root = 0;
   if (one_rank < two_rank) {
     // Two becomes root
-    one_root->setParent(two_root);
-    two_root->setSize(new_size);
-    two_root->setNumDead(new_nd);
+    one_root->set_parent(two_root);
+    two_root->set_size(new_size);
+    two_root->set_number_of_dead_objects(new_nd);
     new_root = two_root;
   } else if (one_rank > two_rank) {
     // One becomes root
-    two_root->setParent(one_root);
-    one_root->setSize(new_size);
-    one_root->setNumDead(new_nd);
+    two_root->set_parent(one_root);
+    one_root->set_size(new_size);
+    one_root->set_number_of_dead_objects(new_nd);
     new_root = one_root;
   } else {
     // Pick one, and increment rank
-    two_root->setParent(one_root);
-    one_root->setSize(new_size);
-    one_root->incRank();
-    one_root->setNumDead(new_nd);
+    two_root->set_parent(one_root);
+    one_root->set_size(new_size);
+    one_root->IncrementRank();
+    one_root->set_number_of_dead_objects(new_nd);
     new_root = one_root;
   }
 
@@ -61,8 +61,8 @@ HeapObject * HeapObject::RecUnion(HeapObject * one, HeapObject * two) {
   if (one_root == two_root)
     return one_root;
 
-  HeapObject * one_ptr = one->getPointsTo();
-  HeapObject * two_ptr = two->getPointsTo();
+  HeapObject * one_ptr = one->get_points_to();
+  HeapObject * two_ptr = two->get_points_to();
 
   HeapObject * new_root = Union(one, two);
 
@@ -84,7 +84,7 @@ HeapObject * HeapObject::RecUnion(HeapObject * one, HeapObject * two) {
 
   if (new_ptr) {
     HeapObject * new_root_2 = Find(new_root);
-    new_root_2->pointsTo = new_ptr;
+    new_root_2->points_to = new_ptr;
   }
 
   return new_root;
@@ -92,7 +92,7 @@ HeapObject * HeapObject::RecUnion(HeapObject * one, HeapObject * two) {
 
 void HeapObject::setPointsTo(HeapObject * target) {
   HeapObject * root = Find(this);
-  HeapObject * old_ptr = root->getPointsTo();
+  HeapObject * old_ptr = root->get_points_to();
   HeapObject * new_ptr = 0;
   if (old_ptr) {
     new_ptr = RecUnion(old_ptr, target);
@@ -101,18 +101,18 @@ void HeapObject::setPointsTo(HeapObject * target) {
   }
 
   HeapObject * new_root = Find(root);
-  new_root->pointsTo = new_ptr;
+  new_root->points_to = new_ptr;
 }
 
 // Heap management
 HeapObject * HeapObject::DemandHeapObject(int object_id) {
   HeapObject * result;
-  HeapMap::iterator f = theHeap.find(object_id);
-  if (f != theHeap.end()) {
+  HeapMap::iterator f = heap.find(object_id);
+  if (f != heap.end()) {
     result = (*f).second;
   } else {
     result = new HeapObject(object_id);
-    theHeap[object_id] = result;
+    heap[object_id] = result;
   }
 
   return result;
