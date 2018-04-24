@@ -4,22 +4,22 @@ namespace et_simulator {
 MethodMap Method::allMethods;
 int CCNode::count = 0;
 
-CCNode * CCNode::DemandChild(int id, int thread_id, int time)
+CCNode * CCNode::DemandChild(int id, int thread_id_, int time)
 {
-  for (CCNodeVector::iterator p = children.begin();
-    p != children.end();
+  for (CCNodeVector::iterator p = children_.begin();
+    p != children_.end();
     p++)
   {
     CCNode * child = (*p);
-    if (child->method_id == id) {
-      child->set_last_call(time);
+    if (child->method_id_ == id) {
+      child->set_last_call_(time);
       return child;
     }
   }
 
   // Not Found
-  CCNode * new_child = new CCNode(id, thread_id, time, this);
-  children.push_back(new_child);
+  CCNode * new_child = new CCNode(id, thread_id_, time, this);
+  children_.push_back(new_child);
   return new_child;
 }
 
@@ -28,27 +28,27 @@ void CCNode::ComputeTotals()
   // Start with this node's values
   IncrementTotalAllocatedBytes(get_allocated_bytes());
   IncrementTotalAllocatedObjects(get_allocated_objects());
-  IncrementTotalDeadBytes(get_dead_bytes());
-  IncrementTotalDeadObjects(get_dead_objects());
+  IncrementTotalDeadBytes(get_dead_bytes_());
+  IncrementTotalDeadObjects(get_dead_objects_());
 
-  // Compute totals for any children, then add up
-  const CCNodeVector & children = get_children();
-  for (CCNodeVector::const_iterator p = children.begin();
-       p != children.end();
+  // Compute totals for any children_, then add up
+  const CCNodeVector & children_ = get_children_();
+  for (CCNodeVector::const_iterator p = children_.begin();
+       p != children_.end();
        p++) {
       CCNode * child = (*p);
       child->ComputeTotals();
 
       IncrementTotalAllocatedBytes(child->get_total_allocated_bytes());
       IncrementTotalAllocatedObjects(child->get_total_allocated_objects());
-      IncrementTotalDeadBytes(child->get_total_dead_bytes());
-      IncrementTotalDeadObjects(child->get_total_dead_objects());
+      IncrementTotalDeadBytes(child->get_total_dead_bytes_());
+      IncrementTotalDeadObjects(child->get_total_dead_objects_());
   }
 }
 
 std::string CCNode::GetMethodFullName()
 {
-  Method * method = Method::getMethod(get_method_id());
+  Method * method = Method::getMethod(get_method_id_());
   std::string result;
   if (method)
     result = method->getClassName() + "::" + method->getMethodName();
@@ -63,9 +63,9 @@ std::string CCNode::GetMethodFullName()
 void CCNode::CollectNodes(CCNodeVector & all)
 {
   all.push_back(this);
-  const CCNodeVector & children = get_children();
-  for (CCNodeVector::const_iterator p = children.begin();
-       p != children.end();
+  const CCNodeVector & children_ = get_children_();
+  for (CCNodeVector::const_iterator p = children_.begin();
+       p != children_.end();
        p++)
     {
       CCNode * child = (*p);
