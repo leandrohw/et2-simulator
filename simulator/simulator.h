@@ -19,11 +19,11 @@ class Simulator
 {
  private:
   // Context tree
-  CCTree * tree;
+  CCTree * tree_;
 
   // Name of the files
-  std::string tracefile;
-  std::string namesfile;
+  std::string trace_file_;
+  std::string name_file_;
 
   // --------------
   // Helper methods
@@ -44,9 +44,9 @@ class Simulator
 
  public:
   Simulator(std::string tf, std::string nf) :
-  tracefile(tf),
-  namesfile(nf) {
-    tree = new CCTree();
+  trace_file_(tf),
+  name_file_(nf) {
+    tree_ = new CCTree();
   }
 
   // Executes an individual trace event
@@ -54,11 +54,11 @@ class Simulator
   // Simulates the entire heap from a traces file
   void Simulate();
 
-  std::string get_trace_file() const { return tracefile; }
-  std::string get_name_file() const { return namesfile; }
+  std::string get_trace_file() const { return trace_file_; }
+  std::string get_name_file() const { return name_file_; }
 
-  void set_trace_file(std::string tf) { tracefile = tf; }
-  void set_name_file(std::string nf) { namesfile = nf; }
+  void set_trace_file(std::string tf) { trace_file_ = tf; }
+  void set_name_file(std::string nf) { name_file_ = nf; }
 
 };
 }  //  namespace et_simulator

@@ -18,7 +18,7 @@ bool Simulator::ParseObjectAllocation(std::vector<std::string> trace) {
   if (absl::SimpleAtoi(trace[1], &object_id) &&
      absl::SimpleAtoi(trace[2], &size) &&
      absl::SimpleAtoi(trace[4], &thread_id)) {
-    tree->HandleObjectAllocation(object_id, size,
+    tree_->HandleObjectAllocation(object_id, size,
                                    type, thread_id);
     return true;
   }
@@ -39,7 +39,7 @@ bool Simulator::ParseObjectUpdate(std::vector<std::string> trace) {
       absl::SimpleAtoi(trace[2], &object_id) &&
       absl::SimpleAtoi(trace[3], &new_target) &&
       absl::SimpleAtoi(trace[4], &thread_id)) {
-    tree->HandleObjectUpdate(old_target, object_id,
+    tree_->HandleObjectUpdate(old_target, object_id,
                                new_target, thread_id);
     return true;
   }
@@ -58,7 +58,7 @@ bool Simulator::ParseMethodEntry(std::vector<std::string> trace) {
   if (absl::SimpleAtoi(trace[1], &method_id)&&
       absl::SimpleAtoi(trace[2], &object_id) &&
       absl::SimpleAtoi(trace[3], &thread_id)) {
-    tree->HandleMethodEntry(method_id, object_id, thread_id);
+    tree_->HandleMethodEntry(method_id, object_id, thread_id);
     return true;
   }
   return false;
@@ -76,7 +76,7 @@ bool Simulator::ParseMethodExit(std::vector<std::string> trace) {
   if (absl::SimpleAtoi(trace[1], &method_id)&&
       absl::SimpleAtoi(trace[2], &object_id) &&
       absl::SimpleAtoi(trace[3], &thread_id)){
-    tree->HandleMethodExit(method_id, object_id, thread_id);
+    tree_->HandleMethodExit(method_id, object_id, thread_id);
     return true;
   }
 
@@ -115,14 +115,14 @@ void Simulator::ReadTraceFile() {
   int64_t record_count = 0;
 
   std::ifstream in;
-  in.open(tracefile);
+  in.open(trace_file_);
 
-  if (!tracefile.empty()) {
+  if (!trace_file_.empty()) {
     std::ifstream in;
-    in.open(tracefile);
+    in.open(trace_file_);
 
     if (in.fail()) {
-      LOG(FATAL) << "Failed to open name file " << tracefile;
+      LOG(FATAL) << "Failed to open name file " << trace_file_;
     }
 
     while (!in.eof()) {
@@ -156,10 +156,10 @@ void Simulator::ReadTraceFile() {
 //     std::string field_name;
 //     std::string type;
 // std::ifstream name_file;
-// name_file.open(namesfile);
+// name_file.open(name_file_);
 //
 // if (name_file.fail()) {
-//   std::cout << "Failed to open name file " << namesfile << std::endl;
+//   std::cout << "Failed to open name file " << name_file_ << std::endl;
 //   exit(EXIT_FAILURE);
 // }
 //
