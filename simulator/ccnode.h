@@ -45,9 +45,9 @@ class CCNode
  public:
   static int count;
 
-  CCNode(int id, int thread_id_, int time, CCNode * par)
+  CCNode(int id, int thread_id, int time, CCNode * par)
     : method_id_(id),
-      thread_id_(thread_id_),
+      thread_id_(thread_id),
       parent_(par),
       calls_(0),
       first_call_(time),
@@ -67,17 +67,17 @@ class CCNode
 
   // Fields
 
-  CCNode * DemandChild(int id, int thread_id_, int time);
+  CCNode * DemandChild(int id, int thread_id, int time);
 
-  int get_method_id_() const { return method_id_; }
+  int get_method_id() const { return method_id_; }
 
   std::string GetMethodFullName();
 
-  int get_thread_id_() const { return thread_id_; }
+  int get_thread_id() const { return thread_id_; }
 
-  CCNode * get_parent_() const { return parent_; }
+  CCNode * get_parent() const { return parent_; }
 
-  const CCNodeVector & get_children_() const { return children_; }
+  const CCNodeVector & get_children() const { return children_; }
 
 
   // Accounting
@@ -87,11 +87,11 @@ class CCNode
   void RankNodes();
 
   void IncrementCalls() { calls_++; }
-  int get_calls_() const { return calls_; }
+  int get_calls() const { return calls_; }
 
-  void set_last_call_(int time) { last_call_ = time; }
-  int get_last_call_() const { return last_call_; }
-  int get_first_call_() const { return first_call_; }
+  void set_last_call(int time) { last_call_ = time; }
+  int get_last_call() const { return last_call_; }
+  int get_first_call() const { return first_call_; }
 
   void IncrementAllocatedBytes(int bytes) { allocated_bytes_ += bytes; }
   int get_allocated_bytes() const { return allocated_bytes_; }
@@ -100,10 +100,10 @@ class CCNode
   int get_allocated_objects() const { return allocated_objects_; }
 
   void IncrementDeadBytes(int bytes) { dead_bytes_ += bytes; }
-  int get_dead_bytes_() const { return dead_bytes_; }
+  int get_dead_bytes() const { return dead_bytes_; }
 
   void IncrementDeadObjects() { dead_objects_++; }
-  int get_dead_objects_() const { return dead_objects_; }
+  int get_dead_objects() const { return dead_objects_; }
 
   void IncrementTotalAllocatedBytes(int total) { total_allocated_bytes_ += total; }
   int get_total_allocated_bytes() const { return total_allocated_bytes_; }
@@ -112,10 +112,10 @@ class CCNode
   int get_total_allocated_objects() const { return total_allocated_objects_; }
 
   void IncrementTotalDeadBytes(int total) { total_dead_bytes_ += total; }
-  int get_total_dead_bytes_() const { return total_dead_bytes_; }
+  int get_total_dead_bytes() const { return total_dead_bytes_; }
 
   void IncrementTotalDeadObjects(int total) { total_dead_objects_ += total; }
-  int get_total_dead_objects_() const { return total_dead_objects_; }
+  int get_total_dead_objects() const { return total_dead_objects_; }
 
   void set_allocated_rank(int rank) { allocated_rank_ = rank; }
   int get_allocated_rank() const { return allocated_rank_; }
