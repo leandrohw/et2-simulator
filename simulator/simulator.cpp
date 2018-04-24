@@ -5,7 +5,7 @@
 #include "glog/logging.h"
 
 namespace et_simulator {
-bool Simulator::parse_object_allocation(std::vector<std::string> trace) {
+bool Simulator::ParseObjectAllocation(std::vector<std::string> trace) {
   if (trace.size() != 5) {
     return false;
   }
@@ -25,7 +25,7 @@ bool Simulator::parse_object_allocation(std::vector<std::string> trace) {
   return false;
 }
 
-bool Simulator::parse_object_update(std::vector<std::string> trace) {
+bool Simulator::ParseObjectUpdate(std::vector<std::string> trace) {
   if (trace.size() != 5) {
     return false;
   }
@@ -46,7 +46,7 @@ bool Simulator::parse_object_update(std::vector<std::string> trace) {
   return false;
 }
 
-bool Simulator::parse_method_entry(std::vector<std::string> trace) {
+bool Simulator::ParseMethodEntry(std::vector<std::string> trace) {
   if (trace.size() != 4) {
     return false;
   }
@@ -64,7 +64,7 @@ bool Simulator::parse_method_entry(std::vector<std::string> trace) {
   return false;
 }
 
-bool Simulator::parse_method_exit(std::vector<std::string> trace) {
+bool Simulator::ParseMethodExit(std::vector<std::string> trace) {
   if (trace.size() != 4) {
     return false;
   }
@@ -83,7 +83,7 @@ bool Simulator::parse_method_exit(std::vector<std::string> trace) {
   return false;
 }
 
-bool Simulator::execute(std::string line) {
+bool Simulator::Execute(std::string line) {
     std::vector<std::string> trace = absl::StrSplit(line, ' ');
 
     if (trace.size() < 1 || trace[0].length() != 1) {
@@ -94,13 +94,13 @@ bool Simulator::execute(std::string line) {
 
     switch (kind) {
       case 'A':
-        return parse_object_allocation(trace);
+        return ParseObjectAllocation(trace);
       case 'U':
-        return parse_object_update(trace);
+        return ParseObjectUpdate(trace);
       case 'M':
-        return parse_method_entry(trace);
+        return ParseMethodEntry(trace);
       case 'E':
-        return parse_method_exit(trace);
+        return ParseMethodExit(trace);
       case 'R':
         // -- Throw out roots for now
         return true;
@@ -110,7 +110,7 @@ bool Simulator::execute(std::string line) {
     return false;
 }
 
-void Simulator::read_trace_file() {
+void Simulator::ReadTraceFile() {
   std::string line;
   int64_t record_count = 0;
 
@@ -129,7 +129,7 @@ void Simulator::read_trace_file() {
       LOG_EVERY_N(INFO, 1000000) << "At " << record_count;
       getline(in, line);
 
-      if (!execute(line)) {
+      if (!Execute(line)) {
         LOG(FATAL) << "Parsing event " << line << " failed.";
       }
 
@@ -141,7 +141,7 @@ void Simulator::read_trace_file() {
   }
 }
 
-// void Simulator::read_name_file()
+// void Simulator::ReadNameFile()
 // {
 //     char kind;
 //     int method_id;
@@ -212,12 +212,12 @@ void Simulator::read_trace_file() {
 //   }
 // }
 
-void Simulator::simulate() {
-  read_trace_file();
-  report();
+void Simulator::Simulate() {
+  ReadTraceFile();
+  Report();
 }
 
-void Simulator::report() {
+void Simulator::Report() {
   // TODO(leandrohw): decide how to output data
 }
 }  // namespace et_simulator
