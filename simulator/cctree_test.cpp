@@ -5,27 +5,27 @@
 
 TEST(CCTreeTest, Constructor) {
   et_simulator::CCTree cctree;
-  EXPECT_EQ(cctree.get_depth(), 0);
-  EXPECT_EQ(cctree.get_thread_number(), 0);
+  EXPECT_EQ(cctree.get_depth_(), 0);
+  EXPECT_EQ(cctree.get_thread_number_(), 0);
 }
 
 TEST(CCTreeTest, Method_Entry) {
   et_simulator::CCTree cctree;
   cctree.HandleMethodEntry(10, 10, 10);
-  EXPECT_EQ(cctree.get_depth(), 1);
+  EXPECT_EQ(cctree.get_depth_(), 1);
   EXPECT_EQ(cctree.get_time(), 1);
   cctree.HandleMethodEntry(10, 10, 10);
-  EXPECT_EQ(cctree.get_depth(), 2);
+  EXPECT_EQ(cctree.get_depth_(), 2);
   EXPECT_EQ(cctree.get_time(), 2);
 }
 
 TEST(CCTreeTest, Method_Exit) {
   et_simulator::CCTree cctree;
   cctree.HandleMethodEntry(474, 0, 1000);
-  EXPECT_EQ(cctree.get_depth(), 1);
+  EXPECT_EQ(cctree.get_depth_(), 1);
   EXPECT_EQ(cctree.get_time(), 1);
   cctree.HandleMethodExit(474, 0, 1000);
-  EXPECT_EQ(cctree.get_depth(), 0);
+  EXPECT_EQ(cctree.get_depth_(), 0);
   EXPECT_EQ(cctree.get_time(), 2);
 }
 

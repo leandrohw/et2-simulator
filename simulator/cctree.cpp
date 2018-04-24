@@ -10,22 +10,22 @@ void CCTree::HandleObjectAllocation(int object_id, int size,
 
   if (thread_id == object_id) {
     // Spawning a new thread
-    // Make it a child of the root
-    current_context = root;
-    CCNode * new_context = current_context->DemandChild(last_method_id,
+    // Make it a child of the root_
+    current_context = root_;
+    CCNode * new_context = current_context->DemandChild(last_method_id_,
                                                   thread_id,
                                                   time);
     new_context->IncrementCalls();
-    stack[thread_id] = new_context;
+    stack__[thread_id] = new_context;
     LOG(INFO) << "Spawn thread 0x" << std::hex << thread_id
               << std::dec;
   }
 
-  if (stack[thread_id] == 0) {
-    stack[thread_id] = root;
+  if (stack__[thread_id] == 0) {
+    stack__[thread_id] = root_;
   }
 
-  current_context = stack[thread_id];
+  current_context = stack__[thread_id];
 
   current_context->IncrementAllocatedBytes(size);
   current_context->IncrementAllocatedObjects();
@@ -37,7 +37,7 @@ void CCTree::HandleObjectAllocation(int object_id, int size,
   LOG(INFO) <<  "Allocate 0x" << std::hex << object_id << " size 0x" << size << std::dec << " at time " << time;
   LogStack(current_context);
 
-  last_thread_id = thread_id;
+  last_thread_id_ = thread_id;
 }
 
 void CCTree::HandleObjectDeath(int object_id) {
@@ -45,7 +45,7 @@ void CCTree::HandleObjectDeath(int object_id) {
   heap_object->MarkDead(time);
   (HeapObject::Find(heap_object))->IncrementNumberOfDeadObjects();
 
-  CCNode * current_context = stack[last_thread_id];
+  CCNode * current_context = stack__[last_thread_id_];
 
   current_context->IncrementDeadBytes(heap_object->get_size());
   current_context->IncrementDeadObjects();
@@ -57,17 +57,17 @@ void CCTree::HandleObjectUpdate(int old_target, int object_id,
   if (object_id != 0 && new_target != 0) {
     HeapObject * heap_object = HeapObject::DemandHeapObject(object_id);
     HeapObject * target_object = HeapObject::DemandHeapObject(new_target);
-    HeapObject * target_root = HeapObject::Find(target_object);
+    HeapObject * target_root_ = HeapObject::Find(target_object);
     if (target_object->get_type() != "[C" &&
         target_object->get_type() != "UNKNOWN" &&
-        target_root->get_id() != 0x19a) {
+        target_root_->get_id() != 0x19a) {
 
       LOG(INFO) << "Pointer from 0x" << std::hex << object_id << " "
                 << heap_object->get_type() << " to 0x" << new_target
                 << std::dec << " " << target_object->get_type() << " at time "
                 << time;
 
-      CCNode * current_context = stack[last_thread_id];
+      CCNode * current_context = stack__[last_thread_id_];
       LogStack(current_context);
 
       heap_object->set_points_to(target_object);
@@ -76,8 +76,8 @@ void CCTree::HandleObjectUpdate(int old_target, int object_id,
 }
 
 void CCTree::HandleMethodEntry(int method_id, int object_id, int thread_id) {
-  CCNode * current_context = stack[thread_id];
-  last_method_id = method_id;
+  CCNode * current_context = stack__[thread_id];
+  last_method_id_ = method_id;
   if (current_context == 0) {
     // Spawning a new thread -- look up where the thread started.
     // Relies on the fact that the thread_id is the same as the
@@ -89,41 +89,41 @@ void CCTree::HandleMethodEntry(int method_id, int object_id, int thread_id) {
                 << " in context";
       LogStack(current_context);
     } else {
-      current_context = root;
+      current_context = root_;
       LOG(INFO) << "Problem: no threadStart for thread id 0x" << std::hex
                 << thread_id << std::dec;
     }
   }
 
   time++;
-  depth++;
+  depth_++;
 
   current_context = current_context->DemandChild(method_id, thread_id, time);
   current_context->IncrementCalls();
-  stack[thread_id] = current_context;
+  stack__[thread_id] = current_context;
 
   LOG(INFO) << "Enter " << current_context->GetMethodFullName() << " 0x"
             << std::hex << method_id << " thread 0x" << thread_id << std::dec
             << " at time " << time;
   LogStack(current_context);
 
-  if (method_id == thread_start_method_id) {
+  if (method_id == thread_start_method_id_) {
     // Found a new thread start
     thread_starts[object_id] = current_context;
-    thread_number++;
-    thread_id_map[object_id] = thread_number;
+    thread_number_++;
+    thread_id_map_[object_id] = thread_number_;
     LOG(INFO) << "Found Thread.start at ";
     LogStack(current_context);
   }
 
-  last_thread_id = thread_id;
+  last_thread_id_ = thread_id;
 }
 
 void CCTree::HandleMethodExit(int method_id, int object_id, int thread_id) {
-  CCNode * current_context = stack[thread_id];
-  last_method_id = method_id;
+  CCNode * current_context = stack__[thread_id];
+  last_method_id_ = method_id;
 
-  if (stack.find(thread_id) == stack.end()) {
+  if (stack__.find(thread_id) == stack__.end()) {
     LOG(INFO) << "Never seen thread 0x" << std::hex << thread_id;
   }
 
@@ -142,10 +142,10 @@ void CCTree::HandleMethodExit(int method_id, int object_id, int thread_id) {
   time++;
   CCNode * returning = current_context;
   int cur_id = returning->get_method_id();
-  int orig_depth = depth;
+  int orig_depth_ = depth_;
   while (returning && returning->get_method_id() != method_id) {
     returning = returning->get_parent();
-    depth--;
+    depth_--;
   }
 
   if (returning == 0) {
@@ -154,26 +154,26 @@ void CCTree::HandleMethodExit(int method_id, int object_id, int thread_id) {
               << cur_id << std::dec;
     LogStack(returning);
     // current_node unchanged
-    depth = orig_depth;
+    depth_ = orig_depth_;
   } else {
     returning->set_last_call(time);
-    stack[thread_id] = returning->get_parent();
-    depth--;
+    stack__[thread_id] = returning->get_parent();
+    depth_--;
   }
-  last_thread_id = thread_id;
+  last_thread_id_ = thread_id;
 }
 
 
-void CCTree::PrintTree(CCNode* node, int depth)
+void CCTree::PrintTree(CCNode* node, int depth_)
 {
   if (node->get_total_allocated_objects() == 0 &&
       node->get_total_allocated_bytes() == 0)
     return;
 
-  for (int i = 0; i < depth; i++)
+  for (int i = 0; i < depth_; i++)
     std::cout << ".";
 
-  if (depth > 0)
+  if (depth_ > 0)
     std::cout << " ";
 
   std::cout << node->GetMethodFullName() << " ";
@@ -189,7 +189,7 @@ void CCTree::PrintTree(CCNode* node, int depth)
        p++)
   {
     CCNode * child = (*p);
-    PrintTree(child, depth+1);
+    PrintTree(child, depth_+1);
   }
 }
 
@@ -290,7 +290,7 @@ void CCTree::EmitTreeMapTM3(std::ofstream & out)
   out << "Bytes\tCalls\tLifetime\tThread\tFirst call" << std::endl;
   out << "INTEGER\tINTEGER\tINTEGER\tINTEGER\tINTEGER" << std::endl;
 
-  EmitTreeMapTM3(root, out);
+  EmitTreeMapTM3(root_, out);
 }
 
 // Emit the calling context tree in TreeML format, for use in prefuse
@@ -309,12 +309,12 @@ void CCTree::emitTreeML(std::ofstream & out)
   out << "  <attributeDecl name=\"thread\" type=\"Long\"/>" << std::endl;
   out << " </declarations>" << std::endl;
 
-  EmitTreeML(root, out, 1);
+  EmitTreeML(root_, out, 1);
 
   out << "</tree>" << std::endl;
 }
 
-void CCTree::EmitTreeML(CCNode * node, std::ofstream & out, int depth)
+void CCTree::EmitTreeML(CCNode * node, std::ofstream & out, int depth_)
 {
   int abytes = node->get_total_allocated_bytes();
   int dbytes = node->get_total_dead_bytes();
@@ -364,14 +364,14 @@ void CCTree::EmitTreeML(CCNode * node, std::ofstream & out, int depth)
     out << "<attribute name=\"objdead\" value=\"" << node->get_dead_objects()
         << "\"/>" << std::endl;
     out << "<attribute name=\"thread\" value=\""
-        << thread_id_map[node->get_thread_id()] << "\"/>" << std::endl;
+        << thread_id_map_[node->get_thread_id()] << "\"/>" << std::endl;
 
     for (CCNode::CCNodeVector::const_iterator p = children.begin();
          p != children.end();
          p++)
     {
       CCNode * child = (*p);
-      EmitTreeML(child, out, depth+1);
+      EmitTreeML(child, out, depth_+1);
     }
 
     if (is_leaf) {
@@ -385,16 +385,16 @@ void CCTree::EmitTreeML(CCNode * node, std::ofstream & out, int depth)
 
 void CCTree::EmitTreeJSON(std::ofstream & out)
 {
-  EmitTreeJSON(root, out, 0);
+  EmitTreeJSON(root_, out, 0);
 }
 
-void CCTree::EmitTreeJSON(CCNode* node, std::ofstream & out, int depth)
+void CCTree::EmitTreeJSON(CCNode* node, std::ofstream & out, int depth_)
 {
   int abytes = node->get_total_allocated_bytes();
   int dbytes = node->get_total_dead_bytes();
 
   if (abytes + dbytes > 0) {
-    std::string space(depth*2, ' ');
+    std::string space(depth_*2, ' ');
     out << space << "{" << std::endl;
 
     Method * method = Method::getMethod(node->get_method_id());
@@ -420,7 +420,7 @@ void CCTree::EmitTreeJSON(CCNode* node, std::ofstream & out, int depth)
            p++)
       {
         CCNode * child = (*p);
-        EmitTreeJSON(child, out, depth+1);
+        EmitTreeJSON(child, out, depth_+1);
       }
       out << space << " ]" << std::endl;
     }
