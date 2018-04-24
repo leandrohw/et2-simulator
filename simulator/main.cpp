@@ -11,5 +11,5 @@ int main(int argc, char * argv[])
   gflags::ParseCommandLineFlags(&argc, &argv, true);
 
   et_simulator::Simulator simulator(FLAGS_tracefile, FLAGS_namesfile);
-  simulator.simulate();
+  simulator.Simulate();
 }

@@ -19,46 +19,46 @@ class Simulator
 {
  private:
   // Context tree
-  CCTree * tree;
+  CCTree * tree_;
 
   // Name of the files
-  std::string tracefile;
-  std::string namesfile;
+  std::string trace_file_;
+  std::string name_file_;
 
   // --------------
   // Helper methods
   // --------------
 
   // Handles input
-  void read_name_file();
-  void read_trace_file();
+  void ReadNameFile();
+  void ReadTraceFile();
 
   // Handles output
-  void report();
+  void Report();
 
   // Parses and validates trace events
-  bool parse_object_allocation(std::vector<std::string> trace);
-  bool parse_object_update(std::vector<std::string> trace);
-  bool parse_method_entry(std::vector<std::string> trace);
-  bool parse_method_exit(std::vector<std::string> trace);
+  bool ParseObjectAllocation(std::vector<std::string> trace);
+  bool ParseObjectUpdate(std::vector<std::string> trace);
+  bool ParseMethodEntry(std::vector<std::string> trace);
+  bool ParseMethodExit(std::vector<std::string> trace);
 
  public:
   Simulator(std::string tf, std::string nf) :
-  tracefile(tf),
-  namesfile(nf) {
-    tree = new CCTree();
+  trace_file_(tf),
+  name_file_(nf) {
+    tree_ = new CCTree();
   }
 
   // Executes an individual trace event
-  bool execute(std::string line);
+  bool Execute(std::string line);
   // Simulates the entire heap from a traces file
-  void simulate();
+  void Simulate();
 
-  std::string getTraceFile() const { return tracefile; }
-  std::string getNamesFile() const { return namesfile; }
+  std::string get_trace_file() const { return trace_file_; }
+  std::string get_name_file() const { return name_file_; }
 
-  void setTraceFile(std::string tf) { tracefile = tf; }
-  void setNamesFile(std::string nf) { namesfile = nf; }
+  void set_trace_file(std::string tf) { trace_file_ = tf; }
+  void set_name_file(std::string nf) { name_file_ = nf; }
 
 };
 }  //  namespace et_simulator

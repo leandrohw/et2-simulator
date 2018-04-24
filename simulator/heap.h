@@ -22,90 +22,90 @@ typedef std::map<int, HeapObject *> HeapMap;
 class HeapObject
 {
  private:
-  int id;
-  std::string type;
-  int bytes;
-  bool live;
+  int id_;
+  std::string type_;
+  int bytes_;
+  bool live_;
 
-  int alloc_time;
-  CCNode * alloc_cc;
+  int allocated_time_;
+  CCNode * allocated_context_;
 
   int death_time;
-  CCNode * death_cc;
+  CCNode * death_context_;
 
   // union/find stuff
-  HeapObject * parent;
+  HeapObject * parent_;
   int rank;
-  HeapObject * pointsTo;
+  HeapObject * points_to_;
 
-  int size;
-  int num_dead;
+  int size_;
+  int number_of_dead_;
 
  public:
   HeapObject(int i)
-    : id(i),
-      type("UNKNOWN"),
-      bytes(-1),
-      live(true),
-      alloc_time(-1),
-      alloc_cc(0),
+    : id_(i),
+      type_("UNKNOWN"),
+      bytes_(-1),
+      live_(true),
+      allocated_time_(-1),
+      allocated_context_(0),
       death_time(-1),
-      death_cc(0),
-      parent(0),
+      death_context_(0),
+      parent_(0),
       rank(0),
-      pointsTo(0),
-      size(1),
-      num_dead(0)
+      points_to_(0),
+      size_(1),
+      number_of_dead_(0)
   {}
 
-  int getId() const { return id; }
+  int get_id() const { return id_; }
 
-  const std::string & getType() const { return type; }
+  const std::string & get_type() const { return type_; }
 
-  void setAlloc(int a_time, int sz, const std::string & ty) {
-    alloc_time = a_time;
-    bytes = sz;
-    type = ty;
+  void MarkAllocated(int a_time, int sz, const std::string & ty) {
+    allocated_time_ = a_time;
+    bytes_ = sz;
+    type_ = ty;
   }
 
-  void setDead(int d_time) {
-    live = false;
+  void MarkDead(int d_time) {
+    live_ = false;
     death_time = d_time;
   }
 
-  bool isLive() const { return live; }
+  bool is_live() const { return live_; }
 
-  int get_allocation_bytes() { return bytes; }
+  int get_allocation_bytes() { return bytes_; }
 
-  int getAllocTime() const { return alloc_time; }
-  int getDeathTime() const { return death_time; }
+  int get_allocation_time() const { return allocated_time_; }
+  int get_death_time() const { return death_time; }
 
-  CCNode * getAllocCC() const { return alloc_cc; }
-  void setAllocCC(CCNode * cc) { alloc_cc = cc; }
+  CCNode * get_allocation_context() const { return allocated_context_; }
+  void MarkAllocatedCC(CCNode * cc) { allocated_context_ = cc; }
 
-  CCNode * getDeathCC() const { return death_cc; }
-  void setDeathCC(CCNode * cc) { death_cc = cc; }
+  CCNode * get_death_context() const { return death_context_; }
+  void setDeathCC(CCNode * cc) { death_context_ = cc; }
 
-  void incRank() { rank++; }
-  int getRank() const { return rank; }
+  void IncrementRank() { rank++; }
+  int get_rank() const { return rank; }
 
-  void setParent(HeapObject * new_parent) {
-    parent = new_parent;
+  void set_parent(HeapObject * new_parent) {
+    parent_ = new_parent;
   }
 
-  HeapObject * getParent() const { return parent; }
-  bool isRoot() const { return parent == 0; }
+  HeapObject * get_parent() const { return parent_; }
+  bool is_root() const { return parent_ == 0; }
 
-  HeapObject * getPointsTo() const { return pointsTo; }
+  HeapObject * get_points_to() const { return points_to_; }
 
-  void setSize(int new_size) { size = new_size; }
-  int getSize() const { return size; }
+  void set_size(int new_size) { size_ = new_size; }
+  int get_size() const { return size_; }
 
-  void setNumDead(int nd) { num_dead = nd; }
-  void incNumDead() { num_dead++; }
-  int getNumDead() const { return num_dead; }
+  void set_number_of_dead_objects(int nd) { number_of_dead_ = nd; }
+  void IncrementNumberOfDeadObjects() { number_of_dead_++; }
+  int get_number_of_dead_objects() const { return number_of_dead_; }
 
-  static HeapMap theHeap;
+  static HeapMap heap;
 
   // Global heap
   static HeapObject * DemandHeapObject(int object_id);
@@ -116,7 +116,7 @@ class HeapObject
   static HeapObject * Union(HeapObject * one, HeapObject * two);
   static HeapObject * RecUnion(HeapObject * one, HeapObject * two);
 
-  void setPointsTo(HeapObject * target);
+  void set_points_to(HeapObject * target);
 };
 }  // namespace et_simulator
 #endif  // ET2_SIMULATOR_SIMULATOR_HEAP_H

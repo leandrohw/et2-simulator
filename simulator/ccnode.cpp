@@ -4,54 +4,54 @@ namespace et_simulator {
 MethodMap Method::allMethods;
 int CCNode::count = 0;
 
-CCNode * CCNode::demand_child(int id, int thread_id, int time)
+CCNode * CCNode::DemandChild(int id, int thread_id, int time)
 {
-  for (CCNodeVector::iterator p = children.begin();
-    p != children.end();
+  for (CCNodeVector::iterator p = children_.begin();
+    p != children_.end();
     p++)
   {
     CCNode * child = (*p);
-    if (child->method_id == id) {
-      child->setLastCall(time);
+    if (child->method_id_ == id) {
+      child->set_last_call(time);
       return child;
     }
   }
 
   // Not Found
   CCNode * new_child = new CCNode(id, thread_id, time, this);
-  children.push_back(new_child);
+  children_.push_back(new_child);
   return new_child;
 }
 
-void CCNode::computeTotals()
+void CCNode::ComputeTotals()
 {
   // Start with this node's values
-  incTotalAllocBytes(getAllocBytes());
-  incTotalAllocObjects(getAllocObjects());
-  incTotalDeadBytes(getDeadBytes());
-  incTotalDeadObjects(getDeadObjects());
+  IncrementTotalAllocatedBytes(get_allocated_bytes());
+  IncrementTotalAllocatedObjects(get_allocated_objects());
+  IncrementTotalDeadBytes(get_dead_bytes());
+  IncrementTotalDeadObjects(get_dead_objects());
 
-  // Compute totals for any children, then add up
-  const CCNodeVector & children = getChildren();
-  for (CCNodeVector::const_iterator p = children.begin();
-       p != children.end();
+  // Compute totals for any children_, then add up
+  const CCNodeVector & children_ = get_children();
+  for (CCNodeVector::const_iterator p = children_.begin();
+       p != children_.end();
        p++) {
       CCNode * child = (*p);
-      child->computeTotals();
+      child->ComputeTotals();
 
-      incTotalAllocBytes(child->getTotalAllocBytes());
-      incTotalAllocObjects(child->getTotalAllocObjects());
-      incTotalDeadBytes(child->getTotalDeadBytes());
-      incTotalDeadObjects(child->getTotalDeadObjects());
+      IncrementTotalAllocatedBytes(child->get_total_allocated_bytes());
+      IncrementTotalAllocatedObjects(child->get_total_allocated_objects());
+      IncrementTotalDeadBytes(child->get_total_dead_bytes());
+      IncrementTotalDeadObjects(child->get_total_dead_objects());
   }
 }
 
-std::string CCNode::getMethodFullName()
+std::string CCNode::GetMethodFullName()
 {
-  Method * meth = Method::getMethod(getMethodId());
+  Method * method = Method::getMethod(get_method_id());
   std::string result;
-  if (meth)
-    result = meth->getClassName() + "::" + meth->getMethodName();
+  if (method)
+    result = method->getClassName() + "::" + method->getMethodName();
   else
     result = "ENTRY";
 
@@ -60,28 +60,28 @@ std::string CCNode::getMethodFullName()
 
 
 
-void CCNode::collectNodes(CCNodeVector & all)
+void CCNode::CollectNodes(CCNodeVector & all)
 {
   all.push_back(this);
-  const CCNodeVector & children = getChildren();
-  for (CCNodeVector::const_iterator p = children.begin();
-       p != children.end();
+  const CCNodeVector & children_ = get_children();
+  for (CCNodeVector::const_iterator p = children_.begin();
+       p != children_.end();
        p++)
     {
       CCNode * child = (*p);
-      child->collectNodes(all);
+      child->CollectNodes(all);
     }
 }
 
 bool compareNodes(CCNode * one, CCNode * two)
 {
-  return one->getTotalAllocBytes() < two->getTotalAllocBytes();
+  return one->get_total_allocated_bytes() < two->get_total_allocated_bytes();
 }
 
-void CCNode::rankNodes()
+void CCNode::RankNodes()
 {
   CCNodeVector all;
-  collectNodes(all);
+  CollectNodes(all);
   std::sort(all.begin(), all.end(), compareNodes);
 
   int rank = all.size();
@@ -90,7 +90,7 @@ void CCNode::rankNodes()
        p++)
     {
       CCNode * child = (*p);
-      child->setAllocRank(rank);
+      child->set_allocated_rank(rank);
       rank--;
     }
 }
