@@ -90,7 +90,7 @@ HeapObject * HeapObject::RecUnion(HeapObject * one, HeapObject * two) {
   return new_root;
 }
 
-void HeapObject::setPointsTo(HeapObject * target) {
+void HeapObject::set_points_to(HeapObject * target) {
   HeapObject * root = Find(this);
   HeapObject * old_ptr = root->get_points_to();
   HeapObject * new_ptr = 0;

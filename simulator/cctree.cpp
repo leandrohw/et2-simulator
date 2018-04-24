@@ -70,7 +70,7 @@ void CCTree::HandleObjectUpdate(int old_target, int object_id,
       CCNode * current_context = stack[last_thread_id];
       LogStack(current_context);
 
-      heap_object->setPointsTo(target_object);
+      heap_object->set_points_to(target_object);
     }
   }
 }

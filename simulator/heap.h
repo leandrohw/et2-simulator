@@ -116,7 +116,7 @@ class HeapObject
   static HeapObject * Union(HeapObject * one, HeapObject * two);
   static HeapObject * RecUnion(HeapObject * one, HeapObject * two);
 
-  void setPointsTo(HeapObject * target);
+  void set_points_to(HeapObject * target);
 };
 }  // namespace et_simulator
 #endif  // ET2_SIMULATOR_SIMULATOR_HEAP_H
