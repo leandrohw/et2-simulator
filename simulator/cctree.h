@@ -42,10 +42,10 @@ class CCTree {
     thread_starts[0] = root_;
   }
 
-  int get_depth_() { return depth_; }
+  int get_depth() { return depth_; }
   int get_time() { return time; }
-  int64_t get_thread_number_() { return thread_number_; }
-  int64_t get_last_thread_id_() { return last_thread_id_; }
+  int64_t get_thread_number() { return thread_number_; }
+  int64_t get_last_thread_id() { return last_thread_id_; }
 
   void HandleObjectAllocation(int object_id, int size,
                               std::string type, int thread_id);

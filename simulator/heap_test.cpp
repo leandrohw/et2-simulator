@@ -54,7 +54,7 @@ TEST(HeapTest, SetIncrRank){
 
 TEST(HeapTest, SetParent){
   et_simulator::HeapObject heapObj(10);
-  et_simulator::HeapObject parent_(0);
+  et_simulator::HeapObject parent(0);
   heapObj.set_parent(&parent);
   EXPECT_EQ(heapObj.get_parent(), &parent);
 }

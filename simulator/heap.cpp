@@ -5,7 +5,7 @@ namespace et_simulator {
 HeapMap HeapObject::heap;
 
 HeapObject * HeapObject::Find(HeapObject * obj) {
-  HeapObject * parent_ = obj->get_parent();
+  HeapObject * parent = obj->get_parent();
   if (parent == 0)
     return obj;
 
@@ -84,7 +84,7 @@ HeapObject * HeapObject::RecUnion(HeapObject * one, HeapObject * two) {
 
   if (new_ptr) {
     HeapObject * new_root_2 = Find(new_root);
-    new_root_2->points_to = new_ptr;
+    new_root_2->points_to_ = new_ptr;
   }
 
   return new_root;
@@ -101,7 +101,7 @@ void HeapObject::set_points_to(HeapObject * target) {
   }
 
   HeapObject * new_root = Find(root);
-  new_root->points_to = new_ptr;
+  new_root->points_to_ = new_ptr;
 }
 
 // Heap management
